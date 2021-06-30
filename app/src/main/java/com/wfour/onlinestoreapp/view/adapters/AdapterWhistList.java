@@ -4,19 +4,27 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Paint;
+
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.wfour.onlinestoreapp.R;
+import com.wfour.onlinestoreapp.datastore.DataStoreManager;
 import com.wfour.onlinestoreapp.interfaces.IMyOnClick;
+import com.wfour.onlinestoreapp.network.modelmanager.singletonmanager.CartManager;
+import com.wfour.onlinestoreapp.objects.CartObj;
 import com.wfour.onlinestoreapp.objects.ProductObj;
 import com.wfour.onlinestoreapp.utils.AppUtil;
 import com.wfour.onlinestoreapp.utils.ImageUtil;
+import com.wfour.onlinestoreapp.view.activities.DealDetailActivity;
 
 import java.util.ArrayList;
 
@@ -29,6 +37,11 @@ public class AdapterWhistList extends RecyclerView.Adapter<AdapterWhistList.MyVi
     private ArrayList<ProductObj> mDatas;
     private ArrayList<ProductObj> List = new ArrayList<>();
     private OnclickRemoveItemWhistList listener;
+    private ArrayList<CartObj> cartObjList;
+    private CartObj cart1;
+    private String color, size;
+    private int count = 0;
+
 
     public void initParam(Activity activity) {
         h = AppUtil.getScreenHeight(activity);
@@ -68,7 +81,7 @@ public class AdapterWhistList extends RecyclerView.Adapter<AdapterWhistList.MyVi
         holder.tvTitle.setText(productObj.getTitle());
         holder.tvPrice.setText("$" + (productObj.getPrice()));
 
-        holder.tvOldPrice.setText("$"+(productObj.getOld_price()));
+        holder.tvOldPrice.setText("$" + (productObj.getOld_price()));
         ImageUtil.setImage(context, holder.imgAvatar, productObj.getImage());
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,6 +100,9 @@ public class AdapterWhistList extends RecyclerView.Adapter<AdapterWhistList.MyVi
                 }
             }
         });
+        holder.btnAddToCart.setOnClickListener(V->{
+            setOrder(productObj);
+        });
 
     }
 
@@ -102,6 +118,7 @@ public class AdapterWhistList extends RecyclerView.Adapter<AdapterWhistList.MyVi
         private TextView tvTitle, tvDescription, tvPrice, tvOldPrice;
         private CardView cardView;
         private ImageView imgAvatar, remove;
+        private AppCompatButton btnAddToCart;
 
 
         public MyViewHolder(final View itemView) {
@@ -111,13 +128,29 @@ public class AdapterWhistList extends RecyclerView.Adapter<AdapterWhistList.MyVi
             cardView = itemView.findViewById(R.id.cardView);
             imgAvatar = itemView.findViewById(R.id.img_avatar);
             tvPrice = itemView.findViewById(R.id.lbl_price);
+            btnAddToCart = itemView.findViewById(R.id.btnAddToCart);
             tvOldPrice = itemView.findViewById(R.id.lbl_price_old);
-            remove    = itemView.findViewById(R.id.remove_whistlist);
+            remove = itemView.findViewById(R.id.remove_whistlist);
             tvOldPrice.setPaintFlags(tvOldPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }
     }
 
-    public interface OnclickRemoveItemWhistList{
+    public interface OnclickRemoveItemWhistList {
         void OnItemClicked(View view, int position);
+    }
+
+    private void setOrder(ProductObj item) {
+        cartObjList = CartManager.getInstance().getArray();
+
+        CartManager.getInstance().addItem(new CartObj(item.getId(), item.getTitle(), item.getPrice(), item.getImage(), 1, item.getPrice(), color, size, item.getOld_price(), item.getIs_prize()));
+        doIncrease();
+    }
+
+    private void doIncrease() {
+        count = DataStoreManager.getCountCart();
+        count++;
+        //getContext().invalidateOptionsMenu();
+        DataStoreManager.saveCountCart(count);
+        Toast.makeText(context, "Added to Cart", Toast.LENGTH_SHORT).show();
     }
 }

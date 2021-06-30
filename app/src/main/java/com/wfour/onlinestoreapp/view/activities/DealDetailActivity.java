@@ -763,27 +763,34 @@ public class DealDetailActivity extends com.wfour.onlinestoreapp.base.BaseActivi
 
             for (int i = 0; i < cartObjList.size(); i++) {
                 cart1 = cartObjList.get(i);
+                Log.d("detail detail ",""+id+" "+cart1.getId());
                 if (color != null && size != null) {
-                    if (cart.getId().equals(id) && cart.getColor().equals(color) && cart.getSize().equals(size)) {
-                        isExist = true;
-                        break;
-                    }
-                } else if (color != null && size == null) {
-                    if (cart.getId().equals(id) && cart.getColor().equals(color)) {
-                        isExist = true;
-                        break;
-                    }
-                } else if (color == null && size != null) {
-                    if (cart.getId().equals(id) && cart.getSize().equals(size)) {
-                        isExist = true;
-                        break;
-                    }
-                } else {
-                    if (cart != null && cart.getId().equals(id)) {
+                    if (cart.getId().equals(id)) {
                         isExist = true;
                         break;
                     }
                 }
+//                if (color != null && size != null) {
+//                    if (cart.getId().equals(id) && cart.getColor().equals(color) && cart.getSize().equals(size)) {
+//                        isExist = true;
+//                        break;
+//                    }
+//                } else if (color != null && size == null) {
+//                    if (cart.getId().equals(id) && cart.getColor().equals(color)) {
+//                        isExist = true;
+//                        break;
+//                    }
+//                } else if (color == null && size != null) {
+//                    if (cart.getId().equals(id) && cart.getSize().equals(size)) {
+//                        isExist = true;
+//                        break;
+//                    }
+//                } else {
+//                    if (cart != null && cart.getId().equals(id)) {
+//                        isExist = true;
+//                        break;
+//                    }
+//                }
             }
             if (isExist) {
                 int number = cart.getNumber();

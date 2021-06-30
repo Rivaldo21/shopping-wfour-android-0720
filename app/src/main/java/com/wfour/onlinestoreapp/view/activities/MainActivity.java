@@ -280,7 +280,7 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     public void setbackGroundMainHaveData() {
         if (bgMain != null) {
-            bgMain.setBackgroundResource(R.drawable.bg_deal);
+//            bgMain.setBackgroundResource(R.drawable.bg_deal);
         }
     }
 

@@ -3,6 +3,7 @@ package com.wfour.onlinestoreapp.view.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -109,6 +110,7 @@ public class FragmentWhisList extends BaseFragment implements EndlessRecyclerOnS
         ShapeableImageView btnNotifyBar = getActivity().findViewById(R.id.mis_action_notification);
         MaterialTextView titleBar = getActivity().findViewById(R.id.tv_title);
         titleBar.setText("Favoritu");
+        titleBar.setTextColor(ContextCompat.getColor(getActivity(), R.color.white));
         logoAppBar.setVisibility(View.GONE);
         btnSearchBar.setVisibility(View.GONE);
         btnNotifyBar.setVisibility(View.GONE);

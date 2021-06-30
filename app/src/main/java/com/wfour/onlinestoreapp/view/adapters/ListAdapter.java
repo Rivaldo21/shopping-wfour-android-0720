@@ -298,6 +298,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.BaseViewHolder
 
         public ViewHolderHeader(View itemView) {
             super(itemView);
+            setIsRecyclable(false);
             viewPager = itemView.findViewById(R.id.view_pager);
             tv_account_name_profile = itemView.findViewById(R.id.tv_account_name_profile);
             tv_point_profile = itemView.findViewById(R.id.tv_point_profile);
@@ -365,18 +366,6 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.BaseViewHolder
                 View view = LayoutInflater.from(container.getContext()).inflate(R.layout.fragment_pager_indicator_cate, container, false);
                 imageView = (ImageView) view.findViewById(R.id.imageView);
                 ImageUtil.setImage(container.getContext(), imageView, item.getImage());
-//                Glide.with(context).load(item.getImage()).into(imageView);
-//                imageView.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View view) {
-//
-//                        Bundle bundle = new Bundle();
-//                        bundle.putParcelable(Args.KEY_PRODUCT_OBJECT, item);
-//                        Intent intent = new Intent(activity, DealDetailActivity.class);
-//                        intent.putExtras(bundle);
-//                        activity.startActivity(intent);
-//                    }
-//                });
                 container.addView(view);
 
                 return view;
@@ -384,11 +373,11 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.BaseViewHolder
 
             @Override
             public void destroyItem(ViewGroup container, int position, Object object) {
-                handler.removeCallbacks(runnable);
                 container.removeView((RelativeLayout) object);
             }
 
             public void setAutoSlide() {
+                handler.removeCallbacks(runnable);
                 handler.postDelayed(runnable, DELAY);
 
             }
