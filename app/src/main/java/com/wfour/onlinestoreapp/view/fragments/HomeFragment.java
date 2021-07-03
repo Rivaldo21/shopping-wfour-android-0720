@@ -205,7 +205,7 @@ public class HomeFragment extends BaseFragment implements IOnItemClickListener, 
         ShapeableImageView btnNotifyBar = getActivity().findViewById(R.id.mis_action_notification);
         MaterialTextView titleBar = getActivity().findViewById(R.id.tv_title);
         titleBar.setText("WFOUR");
-//        titleBar.setTextColor(color.);
+        titleBar.setTextColor(getActivity().getResources().getColor(R.color.yellow2));
         logoAppBar.setVisibility(View.VISIBLE);
         btnSearchBar.setVisibility(View.VISIBLE);
         btnNotifyBar.setVisibility(View.VISIBLE);
@@ -276,6 +276,7 @@ public class HomeFragment extends BaseFragment implements IOnItemClickListener, 
     public void onResume() {
         super.onResume();
         getActivity().setTitle(R.string.home);
+        getActivity().setTitleColor(getActivity().getResources().getColor(R.color.yellow2));
         favoriteReceiver = new FavoriteReceiver();
         IntentFilter filterFavorite = new IntentFilter();
         filterFavorite.addAction(ActionReceiver.ACTION_FAVORITE);
@@ -480,7 +481,7 @@ public class HomeFragment extends BaseFragment implements IOnItemClickListener, 
         recomendedjList.clear();
         recomendedjList = new ArrayList<>();
 
-        ApiUtils.getAPIService().getRecommendedProducts(String.valueOf(1)).enqueue(new Callback<RecommendedProductResponse>() {
+        ApiUtils.getAPIService().getRecommendedProducts().enqueue(new Callback<RecommendedProductResponse>() {
             @Override
             public void onResponse(Call<RecommendedProductResponse> call, Response<RecommendedProductResponse> response) {
                 if (response.body() != null) {
@@ -568,7 +569,7 @@ public class HomeFragment extends BaseFragment implements IOnItemClickListener, 
         requestBody.put("apikey", "36638d85c67dc3ceab7901c2bc9bb36b");
         requestBody.put("domain", "@biz");
 
-        ApiUtils.getAPIService().getPopular(requestBody).enqueue(new Callback<ResponseBody>() {
+        ApiUtils.getAPIService().getPopular().enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.body() != null) {

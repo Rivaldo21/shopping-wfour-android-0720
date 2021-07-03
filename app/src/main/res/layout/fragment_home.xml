@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:scaleType="fitXY"
-        android:src="@drawable/background_hom" />
+        android:src="@drawable/background_gradient" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -39,8 +39,6 @@
         android:layout_marginTop="10dp"
         android:layout_marginRight="15dp"
         android:layout_marginBottom="5dp"
-        app:cardElevation="8dp"
-        android:elevation="10dp"
         app:cardCornerRadius="10dp">
 
         <LinearLayout

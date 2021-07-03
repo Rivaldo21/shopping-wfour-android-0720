@@ -168,7 +168,7 @@
             android:layout_margin="10dp"
             android:fontFamily="@font/inter_regular"
             android:text="Wfour Store"
-            android:textSize="14sp"
+            android:textSize="@dimen/text_size_xnormal"
             app:fontFamily="@font/inter_medium" />
     </LinearLayout>
 </FrameLayout>

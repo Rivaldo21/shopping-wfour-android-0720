@@ -60,9 +60,17 @@ public interface APIService {
     @GET("ecommerce/product-list")
     Call<RecommendedProductResponse> getRecommendedProducts(@Query("is_recomended") String is_recomended);
 
+    @Headers({"Content-Type:application/json"})
+    @GET("ecommerce/recommended-product")
+    Call<RecommendedProductResponse> getRecommendedProducts();
+
+
 
     @POST("ecommerce/product-list")
     Call<ResponseBody> getPopular(@Body Map<String, String> body);
+
+    @POST("ecommerce/popular-product")
+    Call<ResponseBody> getPopular();
 
     @Headers({"Content-Type:application/json"})
     @GET("ecommerce/product-list")

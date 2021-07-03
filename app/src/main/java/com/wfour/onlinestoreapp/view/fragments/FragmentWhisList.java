@@ -3,14 +3,17 @@ package com.wfour.onlinestoreapp.view.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Html;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
 import com.google.android.material.appbar.MaterialToolbar;
@@ -43,7 +46,8 @@ public class FragmentWhisList extends BaseFragment implements EndlessRecyclerOnS
     private static final String TAG = FragmentWhisList.class.getSimpleName();
     private RecyclerView rcvData;
     private AdapterWhistList adapter;
-    private ArrayList<ProductObj> list;
+    private ArrayList<ProductObj> list = new ArrayList<>();
+    private ArrayList<ProductObj> listSearch = new ArrayList<>();
     private EndlessRecyclerOnScrollListener onScrollListener;
     private int page = 1;
     private TextView tvBuy;
@@ -75,7 +79,7 @@ public class FragmentWhisList extends BaseFragment implements EndlessRecyclerOnS
         tvBuy = view.findViewById(R.id.btnBuy);
         tvBuy.setVisibility(View.GONE);
         rcvData = view.findViewById(R.id.rcv_data);
-        list = new ArrayList<>();
+
         getWhistList();
         adapter = new AdapterWhistList(getActivity(), list, new IMyOnClick() {
             @Override
@@ -99,6 +103,40 @@ public class FragmentWhisList extends BaseFragment implements EndlessRecyclerOnS
         rcvData.addOnScrollListener(onScrollListener);
         onScrollListener.setEnded(false);
         tvBuy.setOnClickListener(this);
+        final SearchView searchView = (SearchView) view.findViewById(R.id.sv_favorite);
+        searchView.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                listSearch.clear();
+                Log.d("jumlah data sub", "-- "+list.size());
+                if(list.size()!= 0 && adapter.getItemCount()!= 0){
+                    for(ProductObj productObj : list){
+                        if(productObj.getTitle().toLowerCase().contains(query)){
+                            listSearch.add(productObj);
+                        }
+                    }
+                    adapter.removeList();
+                    adapter.addList(listSearch);
+                    adapter.notifyDataSetChanged();
+
+                }else{
+                    adapter.removeList();
+                    adapter.addList(list);
+                    adapter.notifyDataSetChanged();
+                }
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if(newText.isEmpty()){
+                    adapter.removeList();
+                    getWhistList();
+                }
+                return false;
+            }
+        });
 
         setAppBar(view);
     }
@@ -109,13 +147,15 @@ public class FragmentWhisList extends BaseFragment implements EndlessRecyclerOnS
         ShapeableImageView btnSearchBar = getActivity().findViewById(R.id.mis_action_search);
         ShapeableImageView btnNotifyBar = getActivity().findViewById(R.id.mis_action_notification);
         MaterialTextView titleBar = getActivity().findViewById(R.id.tv_title);
-        titleBar.setText("Favoritu");
+        titleBar.setText("Wishlist");
         titleBar.setTextColor(ContextCompat.getColor(getActivity(), R.color.white));
         logoAppBar.setVisibility(View.GONE);
         btnSearchBar.setVisibility(View.GONE);
         btnNotifyBar.setVisibility(View.GONE);
         toolbars.setVisibility(View.VISIBLE);
         toolbars.setBackgroundResource(R.drawable.red_toolbar_shape);
+
+
     }
 
     @Override
@@ -129,6 +169,7 @@ public class FragmentWhisList extends BaseFragment implements EndlessRecyclerOnS
                 @Override
                 public void onSuccess(ApiResponse response) {
                     if (!response.isError()) {
+                        list.clear();
                         list.addAll(response.getDataList(ProductObj.class));
                         adapter.addList(list);
                         adapter.notifyDataSetChanged();

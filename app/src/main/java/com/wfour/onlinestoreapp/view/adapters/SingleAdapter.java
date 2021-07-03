@@ -130,7 +130,7 @@ public class SingleAdapter extends RecyclerView.Adapter<SingleAdapter.MyViewHold
         }
 
         ImageUtil.setImage(context, holder.imgAvatar, productObj.getImage());
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (onClick != null) {
@@ -159,7 +159,7 @@ public class SingleAdapter extends RecyclerView.Adapter<SingleAdapter.MyViewHold
             super(itemView);
             tvDescription = itemView.findViewById(R.id.tvDescription);
             tvTitle = itemView.findViewById(R.id.tvTitle);
-            cardView = itemView.findViewById(R.id.cardView);
+//            cardView = itemView.findViewById(R.id.cardView);
             imgAvatar = itemView.findViewById(R.id.img_avatar);
             tvPrice = itemView.findViewById(R.id.lbl_price);
             tvOldPrice = itemView.findViewById(R.id.lbl_price_old);

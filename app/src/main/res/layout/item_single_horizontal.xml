@@ -10,16 +10,17 @@
     android:layout_marginLeft="3dp"
     android:layout_marginRight="3dp">
 
-    <androidx.cardview.widget.CardView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/cardView"
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:elevation="@dimen/dimen_1x"
-        app:cardElevation="1dp">
+<!--    <androidx.cardview.widget.CardView-->
+<!--        xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--        xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--        android:id="@+id/cardView"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="150dp"-->
+<!--        android:elevation="@dimen/dimen_1x"-->
+<!--        app:cardElevation="1dp">-->
 
         <LinearLayout
+            android:id="@+id/llView"
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:background="@drawable/bg_item_horizontal"
@@ -38,7 +39,7 @@
 
         </LinearLayout>
 
-    </androidx.cardview.widget.CardView>
+<!--    </androidx.cardview.widget.CardView>-->
 
     <LinearLayout
         android:id="@+id/rlt_content"

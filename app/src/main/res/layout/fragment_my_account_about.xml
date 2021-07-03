@@ -30,7 +30,6 @@
                 android:layout_marginBottom="@dimen/dimen_2x"
                 android:paddingTop="@dimen/dimen_x1x"
                 android:paddingBottom="@dimen/dimen_x1x"
-                android:text=""
                 android:textColor="@color/colorAccent"
                 android:textSize="@dimen/text_size_xnormal"
                 android:visibility="gone" />

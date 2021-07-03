@@ -161,7 +161,7 @@
                     android:paddingBottom="@dimen/dimen_x05x"
                     android:text="+670"
                     android:textColor="@color/colorAccent"
-                    android:textSize="@dimen/text_size_normal"
+                   android:textSize="@dimen/text_size_xnormal"
                     android:visibility="gone" />
 
                 <EditText
@@ -217,7 +217,7 @@
             android:layout_marginBottom="@dimen/dimen_1x"
             android:text="@string/ex_vera_cruz_vila_verde_dili"
             android:textColor="@color/textColorBlackPrimary"
-            android:textSize="@dimen/text_size_normal" />
+           android:textSize="@dimen/text_size_xnormal" />
 
         <FrameLayout
             android:id="@+id/fr_divider"
@@ -250,7 +250,7 @@
                 android:layout_marginRight="30dp"
                 android:layout_marginBottom="5dp"
                 android:text="Bill"
-                android:textSize="@dimen/text_size_normal"
+               android:textSize="@dimen/text_size_xnormal"
                 android:textStyle="normal"
                 app:fontFamily="@font/inter_semibold" />
 
@@ -286,7 +286,7 @@
                 android:layout_marginRight="30dp"
                 android:layout_marginBottom="5dp"
                 android:text="Favoritu"
-                android:textSize="@dimen/text_size_normal"
+               android:textSize="@dimen/text_size_xnormal"
                 android:textStyle="normal"
                 app:fontFamily="@font/inter_semibold" />
 
@@ -320,7 +320,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginRight="30dp"
                 android:text="Kontaktu Ami"
-                android:textSize="@dimen/text_size_normal"
+                android:textSize="@dimen/text_size_xnormal"
                 android:textStyle="bold"
                 app:fontFamily="@font/inter_extrabold" />
         </RelativeLayout>
@@ -338,7 +338,7 @@
                 android:layout_marginRight="30dp"
                 android:layout_marginBottom="5dp"
                 android:text="Facebook Menssenger"
-                android:textSize="@dimen/text_size_normal"
+               android:textSize="@dimen/text_size_xnormal"
                 android:textStyle="normal"
                 app:fontFamily="@font/inter_semibold" />
 
@@ -374,7 +374,7 @@
                 android:layout_marginRight="30dp"
                 android:layout_marginBottom="5dp"
                 android:text="Wfourstore.com"
-                android:textSize="@dimen/text_size_normal"
+               android:textSize="@dimen/text_size_xnormal"
                 android:textStyle="normal"
                 app:fontFamily="@font/inter_semibold" />
 
@@ -409,7 +409,7 @@
                 android:layout_marginRight="30dp"
                 android:layout_marginBottom="5dp"
                 android:text="Sentru Ajuda"
-                android:textSize="@dimen/text_size_normal"
+               android:textSize="@dimen/text_size_xnormal"
                 app:fontFamily="@font/inter_extrabold" />
         </RelativeLayout>
 
@@ -426,7 +426,7 @@
                 android:layout_marginRight="30dp"
                 android:layout_marginBottom="5dp"
                 android:text="FAQ"
-                android:textSize="@dimen/text_size_normal"
+               android:textSize="@dimen/text_size_xnormal"
                 android:textStyle="normal"
                 app:fontFamily="@font/inter_semibold" />
 
@@ -462,7 +462,7 @@
                 android:layout_marginRight="30dp"
                 android:layout_marginBottom="5dp"
                 android:text="Ajuda"
-                android:textSize="@dimen/text_size_normal"
+               android:textSize="@dimen/text_size_xnormal"
                 android:textStyle="normal"
                 app:fontFamily="@font/inter_semibold" />
 
@@ -498,7 +498,7 @@
                 android:layout_marginRight="30dp"
                 android:layout_marginBottom="5dp"
                 android:text="Konaba Ami"
-                android:textSize="@dimen/text_size_normal"
+               android:textSize="@dimen/text_size_xnormal"
                 android:textStyle="normal"
                 app:fontFamily="@font/inter_semibold" />
 
@@ -533,7 +533,7 @@
             android:text="Logout"
             android:textAllCaps="false"
             android:textColor="@color/red"
-            android:textSize="@dimen/text_size_normal" />
+           android:textSize="@dimen/text_size_xnormal" />
 
         <com.google.android.material.textview.MaterialTextView
             android:layout_width="wrap_content"

@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.wfour.onlinestoreapp.R;
@@ -46,10 +47,15 @@ public class SingleHorizontalAdapter extends RecyclerView.Adapter<SingleHorizont
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_single_horizontal, parent, false);
-        CardView cardView = view.findViewById(R.id.cardView);
-        ViewGroup.LayoutParams params = cardView.getLayoutParams();
+//        CardView cardView = view.findViewById(R.id.cardView);
+//        ViewGroup.LayoutParams params = cardView.getLayoutParams();
+//        params.width = (int) (w * 0.45);
+//        cardView.setLayoutParams(params);
+
+        LinearLayout llView = view.findViewById(R.id.llView);
+        ViewGroup.LayoutParams params = llView.getLayoutParams();
         params.width = (int) (w * 0.45);
-        cardView.setLayoutParams(params);
+        llView.setLayoutParams(params);
 
         return new MyViewHolder(view);
     }
@@ -64,7 +70,7 @@ public class SingleHorizontalAdapter extends RecyclerView.Adapter<SingleHorizont
         }
         holder.tvOldPrice.setText(" $"+ StringUtil.convertNumberToString(productObj.getOld_price(),2));
         ImageUtil.setImage(context, holder.imgAvatar, productObj.getImage());
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (onClick != null) {
@@ -89,7 +95,7 @@ public class SingleHorizontalAdapter extends RecyclerView.Adapter<SingleHorizont
             super(itemView);
             tvDescription = itemView.findViewById(R.id.tvDescription);
             tvTitle = itemView.findViewById(R.id.tvTitle);
-            cardView = itemView.findViewById(R.id.cardView);
+//            cardView = itemView.findViewById(R.id.cardView);
             imgAvatar = itemView.findViewById(R.id.img_avatar);
             tvPrice = itemView.findViewById(R.id.lbl_price);
             tvOldPrice = itemView.findViewById(R.id.lbl_price_old);

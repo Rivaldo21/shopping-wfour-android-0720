@@ -56,10 +56,13 @@ public class AdapterWhistList extends RecyclerView.Adapter<AdapterWhistList.MyVi
     }
 
     public void addList(ArrayList<ProductObj> dealObjList) {
-        this.productObjList = dealObjList;
+        this.productObjList.addAll(dealObjList);
         this.notifyDataSetChanged();
     }
-
+    public void removeList(){
+        productObjList.clear();
+        notifyDataSetChanged();
+    }
     public void setListener(OnclickRemoveItemWhistList listener) {
         this.listener = listener;
     }
