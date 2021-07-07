@@ -3,6 +3,7 @@ package com.wfour.onlinestoreapp.view.activities;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -38,6 +39,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.sendbird.android.SendBird;
 import com.sendbird.android.SendBirdException;
 import com.wfour.onlinestoreapp.AppController;
@@ -100,9 +102,12 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+
+import static com.wfour.onlinestoreapp.view.activities.DealDetailActivity.MyPREFERENCES;
 
 public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener,
         DealListFragment.IListenerDealsChange, GoogleApiClient.ConnectionCallbacks,
@@ -229,6 +234,23 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     }
                 }
         );
+       SharedPreferences prefs = this.getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
+        try {
+            ArrayList<ProductObj> last_seen_List = new ArrayList<ProductObj>();
+            Gson gson = new Gson();
+            String json = prefs.getString("codeList", null);
+            if (json != null) {
+                Type type = new TypeToken<ArrayList<ProductObj>>() {
+                }.getType();
+
+                last_seen_List = gson.fromJson(json, type);
+//                    Log.e("lastseensize_in_deal", last_seen_List.size() + "");
+            }
+            Log.d("size last seen ", "---"+last_seen_List.size());
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     @Override

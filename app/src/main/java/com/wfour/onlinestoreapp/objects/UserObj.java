@@ -15,7 +15,7 @@ public class UserObj implements Parcelable {
     public static final String NORMAL = "n";
     public static final String SOCIAL = "s";
     public static final String DATA_USER = "data user";
-    private String id, name, email, phone, address, avatar, dob, status, latitude, longitude, passWord;
+    private String id, name, email, phone, address, avatar, dob, status, latitude, longitude, passWord, login_token;
     private float rate;
     private float avg_rate;
     private int total_rate_count;
@@ -371,5 +371,13 @@ public class UserObj implements Parcelable {
         parcel.writeFloat(balance);
         parcel.writeInt(qb_id);
         parcel.writeDouble(point);
+    }
+
+    public String getLogin_token() {
+        return login_token;
+    }
+
+    public void setLogin_token(String login_token) {
+        this.login_token = login_token;
     }
 }

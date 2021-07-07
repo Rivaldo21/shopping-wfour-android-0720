@@ -877,6 +877,7 @@ public class ModelManager {
         new VolleyGet(context, true, false).getJSONObject(builder, Volley.newRequestQueue(context), new IResponse() {
             @Override
             public void onResponse(Object response) {
+                Log.d("forgotPassword ", "---"+response);
                 if (response != null) {
                     listener.onSuccess(response);
                 } else {
@@ -1031,11 +1032,13 @@ public class ModelManager {
         Uri.Builder builder = Uri.parse(url).buildUpon();
         builder.appendQueryParameter(PARAM_DEAL_ID, id);
         builder.appendQueryParameter(PARAM_TOKEN, token);
+        Log.d("response database ","get detail data");
 
         new VolleyGet(context, true, true).getJSONObject(builder, Volley.newRequestQueue(context),
                 new IResponse() {
                     @Override
                     public void onResponse(Object response) {
+                        Log.d("response database ",""+response.toString());
                         if (response != null) {
                             listener.onSuccess(response);
                         } else {

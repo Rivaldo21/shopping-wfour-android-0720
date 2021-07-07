@@ -210,7 +210,7 @@ public class HomeFragment extends BaseFragment implements IOnItemClickListener, 
         btnSearchBar.setVisibility(View.VISIBLE);
         btnNotifyBar.setVisibility(View.VISIBLE);
         toolbars.setVisibility(View.VISIBLE);
-        toolbars.setBackgroundResource(R.drawable.gradient_toolbar_shape);
+        toolbars.setBackgroundResource(R.drawable.background_toolbar);
     }
 
     public void initSearch(View view) {

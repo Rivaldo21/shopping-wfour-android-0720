@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.graphics.Paint;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +13,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.wfour.onlinestoreapp.R;
+import com.wfour.onlinestoreapp.datastore.DataStoreManager;
 import com.wfour.onlinestoreapp.interfaces.IMyOnClick;
+import com.wfour.onlinestoreapp.network.BaseRequest;
+import com.wfour.onlinestoreapp.network.modelmanager.RequestManger;
 import com.wfour.onlinestoreapp.objects.HomeObj;
 import com.wfour.onlinestoreapp.objects.ProductObj;
 import com.wfour.onlinestoreapp.utils.AppUtil;
@@ -62,12 +67,37 @@ public class SingleVerticalAdapter extends RecyclerView.Adapter<SingleVerticalAd
         }
         holder.tvOldPrice.setText(" $"+ StringUtil.convertNumberToString(productObj.getOld_price(),2));
         ImageUtil.setImage(context, holder.imgAvatar, productObj.getImage());
+        holder.ivFavorite.setImageResource(productObj.getIs_favourite() == 1 ? R.drawable.ic_heart_favorite : R.drawable.ic_heart_unfavorite);
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (onClick != null) {
                     onClick.MyOnClick(position, productObj);
                 }
+            }
+        });
+        holder.ivFavorite.setOnClickListener(v -> {
+            if (DataStoreManager.getUser() != null) {
+                Log.e("user_id ", DataStoreManager.getUser().getId());
+                Log.e("item_id ", productObj.getId());
+                Log.e("object_type", "deal");
+                RequestManger.addFavorite(DataStoreManager.getUser().getId(), productObj.getId(), "deal", new BaseRequest.CompleteListener() {
+                    @Override
+                    public void onSuccess(com.wfour.onlinestoreapp.network.ApiResponse response) {
+                        if (!response.isError()) {
+                            AppUtil.showToast(context, response.getMessage() + "");
+                            holder.ivFavorite.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_heart_favorite));
+                        } else {
+                            AppUtil.showToast(context, response.getMessage() + "");
+                        }
+                    }
+
+                    @Override
+                    public void onError(String message) {
+                        Log.e("", "onError: " + message);
+                    }
+                });
             }
         });
     }
@@ -81,7 +111,7 @@ public class SingleVerticalAdapter extends RecyclerView.Adapter<SingleVerticalAd
 
         private TextView tvTitle, tvDescription, tvPrice,tvOldPrice;
         private CardView cardView;
-        private ImageView imgAvatar;
+        private ImageView imgAvatar,ivFavorite;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -89,6 +119,7 @@ public class SingleVerticalAdapter extends RecyclerView.Adapter<SingleVerticalAd
             tvTitle = itemView.findViewById(R.id.tvTitle);
 //            cardView = itemView.findViewById(R.id.cardView);
             imgAvatar = itemView.findViewById(R.id.img_avatar);
+            ivFavorite = itemView.findViewById(R.id.ivFavorite);
             tvPrice = itemView.findViewById(R.id.lbl_price);
             tvOldPrice = itemView.findViewById(R.id.lbl_price_old);
             tvOldPrice.setPaintFlags(tvOldPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);

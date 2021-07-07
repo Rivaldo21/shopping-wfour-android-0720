@@ -2,8 +2,11 @@ package com.wfour.onlinestoreapp.view.adapters;
 
 import android.app.Activity;
 import android.graphics.Paint;
+
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +15,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.wfour.onlinestoreapp.R;
+import com.wfour.onlinestoreapp.datastore.DataStoreManager;
 import com.wfour.onlinestoreapp.interfaces.IMyOnClick;
+import com.wfour.onlinestoreapp.network.BaseRequest;
+import com.wfour.onlinestoreapp.network.modelmanager.RequestManger;
 import com.wfour.onlinestoreapp.objects.ProductObj;
 import com.wfour.onlinestoreapp.utils.AppUtil;
 import com.wfour.onlinestoreapp.utils.ImageUtil;
@@ -20,7 +26,7 @@ import com.wfour.onlinestoreapp.utils.StringUtil;
 
 import java.util.ArrayList;
 
-public class SingleHorizontalAdapter extends RecyclerView.Adapter<SingleHorizontalAdapter.MyViewHolder>{
+public class SingleHorizontalAdapter extends RecyclerView.Adapter<SingleHorizontalAdapter.MyViewHolder> {
 
     ArrayList<ProductObj> productObjList;
     ArrayList<ProductObj> productObjListFull;
@@ -32,6 +38,7 @@ public class SingleHorizontalAdapter extends RecyclerView.Adapter<SingleHorizont
         w = AppUtil.getScreenWidth(activity);
 
     }
+
     public SingleHorizontalAdapter(Activity context, ArrayList<ProductObj> productObjList, IMyOnClick onClick) {
         this.context = context;
         this.productObjList = productObjList;
@@ -43,6 +50,7 @@ public class SingleHorizontalAdapter extends RecyclerView.Adapter<SingleHorizont
         this.productObjList = dealObjList;
         this.notifyDataSetChanged();
     }
+
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
@@ -64,12 +72,14 @@ public class SingleHorizontalAdapter extends RecyclerView.Adapter<SingleHorizont
     public void onBindViewHolder(MyViewHolder holder, final int position) {
         final ProductObj productObj = productObjList.get(position);
         holder.tvTitle.setText(productObj.getTitle());
-        holder.tvPrice.setText(" $" + StringUtil.convertNumberToString(productObj.getPrice(),2));
-        if(productObj.getOld_price()==0){
+        holder.tvPrice.setText(" $" + StringUtil.convertNumberToString(productObj.getPrice(), 2));
+        if (productObj.getOld_price() == 0) {
             holder.tvOldPrice.setVisibility(View.GONE);
         }
-        holder.tvOldPrice.setText(" $"+ StringUtil.convertNumberToString(productObj.getOld_price(),2));
+        holder.tvOldPrice.setText(" $" + StringUtil.convertNumberToString(productObj.getOld_price(), 2));
         ImageUtil.setImage(context, holder.imgAvatar, productObj.getImage());
+        holder.ivFavorite.setImageResource(productObj.getIs_favourite() == 1 ? R.drawable.ic_heart_favorite : R.drawable.ic_heart_unfavorite);
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,18 +88,41 @@ public class SingleHorizontalAdapter extends RecyclerView.Adapter<SingleHorizont
                 }
             }
         });
+        holder.ivFavorite.setOnClickListener(v -> {
+            if (DataStoreManager.getUser() != null) {
+                Log.e("user_id ", DataStoreManager.getUser().getId());
+                Log.e("item_id ", productObj.getId());
+                Log.e("object_type", "deal");
+                RequestManger.addFavorite(DataStoreManager.getUser().getId(), productObj.getId(), "deal", new BaseRequest.CompleteListener() {
+                    @Override
+                    public void onSuccess(com.wfour.onlinestoreapp.network.ApiResponse response) {
+                        if (!response.isError()) {
+                            AppUtil.showToast(context, response.getMessage() + "");
+                            holder.ivFavorite.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_heart_favorite));
+                        } else {
+                            AppUtil.showToast(context, response.getMessage() + "");
+                        }
+                    }
+
+                    @Override
+                    public void onError(String message) {
+                        Log.e("", "onError: " + message);
+                    }
+                });
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
-        return (productObjList.size() >=10)? 10:productObjList.size();
+        return (productObjList.size() >= 10) ? 10 : productObjList.size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView tvTitle, tvDescription, tvPrice,tvOldPrice;
+        private TextView tvTitle, tvDescription, tvPrice, tvOldPrice;
         private CardView cardView;
-        private ImageView imgAvatar;
+        private ImageView imgAvatar, ivFavorite;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -97,6 +130,7 @@ public class SingleHorizontalAdapter extends RecyclerView.Adapter<SingleHorizont
             tvTitle = itemView.findViewById(R.id.tvTitle);
 //            cardView = itemView.findViewById(R.id.cardView);
             imgAvatar = itemView.findViewById(R.id.img_avatar);
+            ivFavorite = itemView.findViewById(R.id.ivFavorite);
             tvPrice = itemView.findViewById(R.id.lbl_price);
             tvOldPrice = itemView.findViewById(R.id.lbl_price_old);
             tvOldPrice.setPaintFlags(tvOldPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);

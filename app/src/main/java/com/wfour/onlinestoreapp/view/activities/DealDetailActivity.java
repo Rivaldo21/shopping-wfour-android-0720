@@ -180,9 +180,9 @@ public class DealDetailActivity extends com.wfour.onlinestoreapp.base.BaseActivi
                 cartString = args.getString("cart");
                 item = args.getParcelable(Args.KEY_PRODUCT_OBJECT);
 
-                if (last_seen_List.size() == 4) {
-                    last_seen_List.remove(0);
-                }
+//                if (last_seen_List.size() == 4) {
+//                    last_seen_List.remove(0);
+//                }
                 if (!check_last_Seen_Exists(item.getId())) {
                     last_seen_List.add(item);
                     String jsonText = new Gson().toJson(last_seen_List);
@@ -535,9 +535,11 @@ public class DealDetailActivity extends com.wfour.onlinestoreapp.base.BaseActivi
             Log.e("user_id ", DataStoreManager.getUser().getId());
             Log.e("item_id ", item.getId());
             Log.e("object_type", "deal");
+            Log.d("request data", ">>>");
             RequestManger.addFavorite(DataStoreManager.getUser().getId(), item.getId(), "deal", new BaseRequest.CompleteListener() {
                 @Override
                 public void onSuccess(com.wfour.onlinestoreapp.network.ApiResponse response) {
+                    Log.d("request data", ">>>"+response);
                     if (!response.isError()) {
                         AppUtil.showToast(self, response.getMessage() + "");
                         imgFavorite.setImageDrawable(getResources().getDrawable(R.drawable.ic_heart_favorite));

@@ -6,9 +6,9 @@
     android:orientation="vertical">
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="120dp"
         android:scaleType="fitXY"
-        android:src="@drawable/background_gradient" />
+        android:src="@drawable/background_home" />
 
     <RelativeLayout
         android:layout_width="match_parent"

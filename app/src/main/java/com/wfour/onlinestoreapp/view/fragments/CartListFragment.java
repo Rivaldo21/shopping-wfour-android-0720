@@ -1,6 +1,7 @@
 package com.wfour.onlinestoreapp.view.fragments;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.appcompat.widget.AppCompatButton;
@@ -28,10 +29,12 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.wfour.onlinestoreapp.R;
 import com.wfour.onlinestoreapp.datastore.DataStoreManager;
 import com.wfour.onlinestoreapp.globals.Args;
 import com.wfour.onlinestoreapp.globals.GlobalFunctions;
+import com.wfour.onlinestoreapp.interfaces.IMyOnClick;
 import com.wfour.onlinestoreapp.interfaces.MyInterface;
 import com.wfour.onlinestoreapp.network.modelmanager.singletonmanager.CartManager;
 import com.wfour.onlinestoreapp.objects.CartObj;
@@ -50,12 +53,17 @@ import com.wfour.onlinestoreapp.view.activities.MainActivity;
 import com.wfour.onlinestoreapp.view.activities.SplashLoginActivity;
 import com.wfour.onlinestoreapp.view.adapters.CartAdapter;
 import com.wfour.onlinestoreapp.view.adapters.RecomendedListAdapter;
+import com.wfour.onlinestoreapp.view.adapters.SingleHorizontalAdapter;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static android.content.Context.MODE_PRIVATE;
+import static com.wfour.onlinestoreapp.view.activities.DealDetailActivity.MyPREFERENCES;
 
 public class CartListFragment extends com.wfour.onlinestoreapp.base.BaseFragment implements View.OnClickListener {
 
@@ -346,39 +354,76 @@ public class CartListFragment extends com.wfour.onlinestoreapp.base.BaseFragment
 
     private void setRecomendedRecyclerview() {
 
-        ApiUtils.getAPIService().getRecommendedProducts(String.valueOf(1)).enqueue(new Callback<RecommendedProductResponse>() {
-            @Override
-            public void onResponse(Call<RecommendedProductResponse> call, Response<RecommendedProductResponse> response) {
-                if (response.body() != null) {
-                    Log.e("TAG", "onResponse: " + new Gson().toJson(response.body()));
-                    if (response.body().getData() != null) {
-                        RecommendedProductResponse m = response.body();
-                        RecomendedObj obj;
-                        int i = 0;
-                        while (i < m.getData().size()) {
-                            obj = new RecomendedObj();
-                            obj.setProduct_Name(m.getData().get(i).getTitle());
-                            obj.setActual_rate(m.getData().get(i).getPrice());
-                            obj.setDiscount_rate(m.getData().get(i).getOld_price());
-                            obj.setDescription(m.getData().get(i).getOverview());
-                            recomendedlist.add(obj);
-                            i++;
-                        }
-                        recomended_recyclerview.setHasFixedSize(true);
-                        LinearLayoutManager linearLayout = new LinearLayoutManager(getActivity());
-                        linearLayout.setOrientation(LinearLayoutManager.HORIZONTAL);
-                        recomendedAdapter = new RecomendedListAdapter(getActivity(), recomendedlist);
-                        recomended_recyclerview.setLayoutManager(linearLayout);
-                        recomended_recyclerview.setAdapter(recomendedAdapter);
-                    }
-                }
-            }
+//        ApiUtils.getAPIService().getRecommendedProducts(String.valueOf(1)).enqueue(new Callback<RecommendedProductResponse>() {
+//            @Override
+//            public void onResponse(Call<RecommendedProductResponse> call, Response<RecommendedProductResponse> response) {
+//                if (response.body() != null) {
+//                    Log.e("TAG", "onResponse: " + new Gson().toJson(response.body()));
+//                    if (response.body().getData() != null) {
+//                        RecommendedProductResponse m = response.body();
+//                        RecomendedObj obj;
+//                        int i = 0;
+//                        while (i < m.getData().size()) {
+//                            obj = new RecomendedObj();
+//                            obj.setProduct_Name(m.getData().get(i).getTitle());
+//                            obj.setActual_rate(m.getData().get(i).getPrice());
+//                            obj.setDiscount_rate(m.getData().get(i).getOld_price());
+//                            obj.setDescription(m.getData().get(i).getOverview());
+//                            recomendedlist.add(obj);
+//                            i++;
+//                        }
+//                        recomended_recyclerview.setHasFixedSize(true);
+//                        LinearLayoutManager linearLayout = new LinearLayoutManager(getActivity());
+//                        linearLayout.setOrientation(LinearLayoutManager.HORIZONTAL);
+//                        recomendedAdapter = new RecomendedListAdapter(getActivity(), recomendedlist);
+//                        recomended_recyclerview.setLayoutManager(linearLayout);
+//                        recomended_recyclerview.setAdapter(recomendedAdapter);
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<RecommendedProductResponse> call, Throwable t) {
+//                Log.e("TAG", "onFailure: " + t.getMessage());
+//            }
+//        });
+        SharedPreferences prefs = getActivity().getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
+        try {
+            ArrayList<ProductObj> last_seen_List = new ArrayList<ProductObj>();
+            Gson gson = new Gson();
+            String json = prefs.getString("codeList", null);
+            if (json != null) {
+                Type type = new TypeToken<ArrayList<ProductObj>>() {
+                }.getType();
 
-            @Override
-            public void onFailure(Call<RecommendedProductResponse> call, Throwable t) {
-                Log.e("TAG", "onFailure: " + t.getMessage());
+                last_seen_List = gson.fromJson(json, type);
+                    Log.e("lastseensize_in_deal", last_seen_List.size() + "");
             }
-        });
+            LinearLayoutManager linearLayout = new LinearLayoutManager(getContext());
+
+//                if(homeObj.name.equals("REKOMENDA"))
+//                {
+//                    viewHolder.rcvData.setAdapter(new SingleHorizontalAdapter(activity, homeObj.getmListRecomended(), new IMyOnClick() {
+//                        @Override
+//                        public void MyOnClick(int position, ProductObj productObj) {
+//                            setData(productObj);
+//                        }
+//                    }));
+//                }
+            recomended_recyclerview.setAdapter(new SingleHorizontalAdapter(getActivity(), last_seen_List, new IMyOnClick() {
+                @Override
+                public void MyOnClick(int position, ProductObj productObj) {
+                    Bundle bundle = new Bundle();
+                    bundle.putParcelable(Args.KEY_PRODUCT_OBJECT, productObj);
+                    GlobalFunctions.startActivityWithoutAnimation(getActivity(), DealDetailActivity.class, bundle);
+                }
+            }));
+            recomended_recyclerview.setHasFixedSize(true);
+            linearLayout.setOrientation(LinearLayoutManager.HORIZONTAL);
+            recomended_recyclerview.setLayoutManager(linearLayout);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
     @Override
     public void onResume() {

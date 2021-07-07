@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.widget.CheckBox;
@@ -438,13 +439,15 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                     ApiResponse response = new ApiResponse(jsonObject);
 
                     Log.e("hihi", new Gson().toJson(response));
+                    Log.e("hihi", "hi"+response.isError());
                     if (!response.isError()) {
                         UserObj userObj = response.getDataObject(UserObj.class);
                         //userObj.setToken(response.getValueFromRoot(Args.TOKEN));
 //                        userObj.setRememberMe(mChkRememberMe.isChecked());
                         userObj.setPassWord(password);
                         DataStoreManager.saveUser(userObj);
-                        DataStoreManager.saveToken(response.getLogin_token());
+                        Log.e("hihihhiihi", "--- "+userObj.getLogin_token());
+                        DataStoreManager.saveToken(userObj.getLogin_token());
                         mTxtEmail.setText(userObj.getEmail());
                         AddressManager.getInstance().getArray().clear();
                         AddressManager.getInstance().addItem(new Person(userObj.getName(), userObj.getPhone(), userObj.getAddress()));
@@ -524,13 +527,17 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     }
 
     private void showDialogForgot() {
-        final Dialog dialog = new Dialog(self);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.dialog_forgot_password);
+//        final Dialog dialog = new Dialog(self);
+//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//        dialog.setContentView(R.layout.dialog_forgot_password);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        View view = View.inflate(this, R.layout.dialog_forgot_password, null);
+        dialogBuilder.setView(view);
+        AlertDialog alertDialog = dialogBuilder.create();
 
-        final EditText edtEmail = dialog.findViewById(R.id.txt_email);
-        TextView btnSubmit = dialog.findViewById(R.id.tv_submit);
-        final TextView tvError = dialog.findViewById(R.id.tv_error);
+        final EditText edtEmail = view.findViewById(R.id.txt_email);
+        final  TextView btnSubmit = view.findViewById(R.id.tv_submit);
+        final TextView tvError = view.findViewById(R.id.tv_error);
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -541,12 +548,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
                     return;
                 }
                 requestForgotPasswork(email);
-                dialog.dismiss();
+                alertDialog.dismiss();
             }
         });
 
-        if (!dialog.isShowing()) {
-            dialog.show();
+        if (!alertDialog.isShowing()) {
+            alertDialog.show();
         }
     }
 

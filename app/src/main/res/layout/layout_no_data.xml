@@ -91,7 +91,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:fontFamily="@font/inter_extrabold"
-                    android:text="Recomenda ba o"
+                    android:text="Last Seen"
                     android:textColor="@color/text_black"
                     android:textSize="@dimen/text_size_normal" />
 

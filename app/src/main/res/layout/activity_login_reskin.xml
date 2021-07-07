@@ -114,7 +114,6 @@
                             android:gravity="right"
                             android:layout_width="match_parent"
                             android:text="@string/forget_password"
-                            android:visibility="gone"
                             android:layout_marginTop="@dimen/dimen_2dp"
                             android:textColor="@color/black"
                             android:fontFamily="@font/inter_semibold"
