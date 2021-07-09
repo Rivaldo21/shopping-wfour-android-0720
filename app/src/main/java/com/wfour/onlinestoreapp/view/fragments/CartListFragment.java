@@ -68,7 +68,7 @@ import static com.wfour.onlinestoreapp.view.activities.DealDetailActivity.MyPREF
 public class CartListFragment extends com.wfour.onlinestoreapp.base.BaseFragment implements View.OnClickListener {
 
     private Toolbar toolbar;
-    private TextView tvMoney, shop_now_textview;
+    private TextView tvMoney, shop_now_textview,   tvDetail;
     private AppCompatButton btnOrder;
     private DealObj item;
     private static final int RC_ACTIVATE_DEAL = 1;
@@ -132,6 +132,7 @@ public class CartListFragment extends com.wfour.onlinestoreapp.base.BaseFragment
         back_imageview = view.findViewById(R.id.back_imageview);
         shop_now_textview = view.findViewById(R.id.shop_now_textview);
         recomended_recyclerview = view.findViewById(R.id.recomended_recyclerview);
+         tvDetail= view.findViewById(R.id.tvDetail);
         btnOrder.setOnClickListener(this);
         shop_now_textview.setOnClickListener(
                 new View.OnClickListener() {
@@ -387,6 +388,7 @@ public class CartListFragment extends com.wfour.onlinestoreapp.base.BaseFragment
 //                Log.e("TAG", "onFailure: " + t.getMessage());
 //            }
 //        });
+        tvDetail.setVisibility(View.GONE);
         SharedPreferences prefs = getActivity().getSharedPreferences(MyPREFERENCES, MODE_PRIVATE);
         try {
             ArrayList<ProductObj> last_seen_List = new ArrayList<ProductObj>();

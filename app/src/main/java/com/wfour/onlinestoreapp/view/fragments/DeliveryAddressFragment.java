@@ -3,8 +3,11 @@ package com.wfour.onlinestoreapp.view.fragments;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,7 +20,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,9 +64,9 @@ public class DeliveryAddressFragment extends BaseFragment implements View.OnClic
     private Toolbar toolbar;
     private TextView btn_Next, btnAddAddress, tvTitle;
     private EditText edtName, edtPhone, edtAddress, edtCity, edtTown;
-    private LinearLayout lnl_add;
+    private LinearLayout lnl_add, llDelivery;
     private ArrayList<Person> personList;
-    private RecyclerView contentRCL;
+    //    private RecyclerView contentRCL;
     private AddressAdapter mAdapter;
 
     private String name;
@@ -86,6 +91,7 @@ public class DeliveryAddressFragment extends BaseFragment implements View.OnClic
     private CartListFragment cartListFragment;
 
     private DeliveryAddressFragment deliveryAddressFragment;
+    private ArrayList<DeliveryObj> deliveryObjListPickUp;
     private ArrayList<DeliveryObj> deliveryObjList;
 
     private String city;
@@ -94,9 +100,13 @@ public class DeliveryAddressFragment extends BaseFragment implements View.OnClic
     private int count;
     private ArrayList<ProductObj> cartList;
     private DeliveryObj deliveryObj = new DeliveryObj();
-    private RecyclerView rcv_data;
+    //    private RecyclerView rcv_data;
     private DeliveryAdapter mAAdapter;
     String text;
+    private RadioButton rbPickUp, rbDelivery;
+    private TextView tvDefaultDelivery, tvTypeAddress, tvNameDelivery, tvDefault, tvTypePickUp, tvStore, tvAddressDelivery, tvNumberDelivery;
+    private ImageView ivCheckedDelivery, ivChecked, ivEditDelivery, ivLocation;
+    private TextView tvNumber, tvAddress;
 
     @Override
     protected int getLayoutInflate() {
@@ -119,12 +129,33 @@ public class DeliveryAddressFragment extends BaseFragment implements View.OnClic
         mCartActivity.setTitle(R.string.delivery_address);
 
         btn_Next = view.findViewById(R.id.btn_Next);
+        rbPickUp = view.findViewById(R.id.rbPickUp);
+        rbDelivery = view.findViewById(R.id.rbDelivery);
+
+        tvDefaultDelivery = view.findViewById(R.id.ivDefaultDelivery);
+        tvTypeAddress = view.findViewById(R.id.tvTypeAddress);
+        tvNameDelivery = view.findViewById(R.id.tvName);
+        tvDefault = view.findViewById(R.id.tvDefault);
+        tvTypePickUp = view.findViewById(R.id.tvTypePickUp);
+        tvStore = view.findViewById(R.id.tvStore);
+        ivCheckedDelivery = view.findViewById(R.id.ivCheckedDelivery);
+        ivChecked = view.findViewById(R.id.ivChecked);
+        ivLocation = view.findViewById(R.id.ivLocation);
+        ivEditDelivery = view.findViewById(R.id.ivEditDelivery);
+        tvNumberDelivery = view.findViewById(R.id.tvNumberDelivery);
+        tvAddressDelivery = view.findViewById(R.id.tvAddressDelivery);
+        tvNumber = view.findViewById(R.id.tvNumber);
+        tvAddress = view.findViewById(R.id.tvAddress);
+
+        ivLocation.setOnClickListener(this);
         btn_Next.setOnClickListener(this);
 
         lnl_add = view.findViewById(R.id.lnlAdd);
+        llDelivery = view.findViewById(R.id.llDelivery);
         lnl_add.setOnClickListener(this);
+        ivEditDelivery.setOnClickListener(this);
 
-        contentRCL = view.findViewById(R.id.rclView);
+//        contentRCL = view.findViewById(R.id.rclView);
 
         mAdapter = new AddressAdapter(mCartActivity, personList, new MyOnClick() {
             @Override
@@ -146,12 +177,14 @@ public class DeliveryAddressFragment extends BaseFragment implements View.OnClic
             }
         });
 
-        mAAdapter = new DeliveryAdapter(self, deliveryObjList, new MyOnClickDelivery() {
+        mAAdapter = new DeliveryAdapter(self, deliveryObjListPickUp, new MyOnClickDelivery() {
 
             @Override
             public void onClick(int position) {
                 deliveryObj = new DeliveryObj();
-                deliveryObj = deliveryObjList.get(position);
+                deliveryObj = deliveryObjListPickUp.get(position);
+                tvTypePickUp.setText(deliveryObj.getDescription().replace("Wfour ", ""));
+                tvAddress.setText(deliveryObj.getAddress());
             }
         });
 
@@ -159,21 +192,71 @@ public class DeliveryAddressFragment extends BaseFragment implements View.OnClic
         mAdapter.notifyDataSetChanged();
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(mCartActivity);
-        contentRCL.setLayoutManager(layoutManager);
-        contentRCL.setAdapter(mAdapter);
+//        contentRCL.setLayoutManager(layoutManager);
+//        contentRCL.setAdapter(mAdapter);
 
         if (AddressManager.getInstance().getArray().size() != 0) {
             lnl_add.setVisibility(View.GONE);
+            llDelivery.setVisibility(View.VISIBLE);
         } else {
             lnl_add.setVisibility(View.VISIBLE);
+            llDelivery.setVisibility(View.GONE);
         }
-        rcv_data = view.findViewById(R.id.rcvData);
+//        rcv_data = view.findViewById(R.id.rcvData);
 
         RecyclerView.LayoutManager layoutManager1 = new LinearLayoutManager(self);
-        rcv_data.setLayoutManager(layoutManager1);
-        rcv_data.setAdapter(mAAdapter);
-        rcv_data.setNestedScrollingEnabled(false);
+//        rcv_data.setLayoutManager(layoutManager1);
+//        rcv_data.setAdapter(mAAdapter);
+//        rcv_data.setNestedScrollingEnabled(false);
         mAAdapter.notifyDataSetChanged();
+        rbDelivery.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (b) {
+                deliveryObj = new DeliveryObj();
+                deliveryObj = deliveryObjList.get(0);
+                rbPickUp.setChecked(false);
+                changeView(true);
+
+            }
+
+        });
+        rbPickUp.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (b) {
+                deliveryObj = new DeliveryObj();
+                deliveryObj = deliveryObjListPickUp.get(0);
+                rbDelivery.setChecked(false);
+                changeView(false);
+            }
+        });
+    }
+
+    private void changeView(boolean isDelivery) {
+        if (isDelivery) {
+            tvNameDelivery.setTextColor(getResources().getColor(R.color.red));
+            ivCheckedDelivery.setImageDrawable(getResources().getDrawable(R.drawable.ic_baseline_check_circle_24));
+            tvDefaultDelivery.setBackground(getResources().getDrawable(R.drawable.background_red_rounded));
+            tvTypeAddress.setBackground(getResources().getDrawable(R.drawable.background_red_rounded));
+            ivEditDelivery.setColorFilter(ContextCompat.getColor(getActivity(), R.color.red), PorterDuff.Mode.SRC_IN);
+
+            tvStore.setTextColor(getResources().getColor(R.color.gray));
+            ivChecked.setImageDrawable(getResources().getDrawable(R.drawable.ic_baseline_check_circle_gray));
+            tvDefault.setBackground(getResources().getDrawable(R.drawable.background_grey_rounded));
+            tvTypePickUp.setBackground(getResources().getDrawable(R.drawable.background_grey_rounded));
+            ivLocation.setColorFilter(ContextCompat.getColor(getActivity(), R.color.gray), PorterDuff.Mode.SRC_IN);
+
+        } else {
+            tvNameDelivery.setTextColor(getResources().getColor(R.color.gray));
+            ivCheckedDelivery.setImageDrawable(getResources().getDrawable(R.drawable.ic_baseline_check_circle_gray));
+            tvDefaultDelivery.setBackground(getResources().getDrawable(R.drawable.background_grey_rounded));
+            tvTypeAddress.setBackground(getResources().getDrawable(R.drawable.background_grey_rounded));
+            ivEditDelivery.setColorFilter(ContextCompat.getColor(getActivity(), R.color.gray), PorterDuff.Mode.SRC_IN);
+
+            tvStore.setTextColor(getResources().getColor(R.color.red));
+            ivChecked.setImageDrawable(getResources().getDrawable(R.drawable.ic_baseline_check_circle_24));
+            tvDefault.setBackground(getResources().getDrawable(R.drawable.background_red_rounded));
+            tvTypePickUp.setBackground(getResources().getDrawable(R.drawable.background_red_rounded));
+            ivLocation.setColorFilter(ContextCompat.getColor(getActivity(), R.color.red), PorterDuff.Mode.SRC_IN);
+
+        }
 
     }
 
@@ -185,9 +268,29 @@ public class DeliveryAddressFragment extends BaseFragment implements View.OnClic
                 public void onSuccess(Object object) {
                     JSONObject obj = (JSONObject) object;
                     ApiResponse response = new ApiResponse(obj);
+                    deliveryObjListPickUp = new ArrayList<>();
                     deliveryObjList = new ArrayList<>();
                     if (!response.isError()) {
+                        for (int i = 0;  i < response.getDataList(DeliveryObj.class).size(); i++) {
+                            DeliveryObj dv = response.getDataList(DeliveryObj.class).get(i);
+                            if (dv.getName().toLowerCase().equals("pick up in store")) {
+                                if (deliveryObjListPickUp.size() == 0) {
+                                    dv.setSelected(true);
+                                }
+                                deliveryObjListPickUp.add(dv);
+
+                            }
+                        }
+                        for (DeliveryObj objDev : deliveryObjListPickUp) {
+                            Log.d("DeliveryObj ", "-" + objDev.getId() + "+ " + objDev.isSelected());
+                        }
                         deliveryObjList.addAll(response.getDataList(DeliveryObj.class));
+                        if (deliveryObjListPickUp.size() > 0) {
+                            DeliveryObj objDelivery = deliveryObjListPickUp.get(0);
+                            tvTypePickUp.setText(objDelivery.getDescription().replace("Wfour ", ""));
+                            tvAddress.setText(objDelivery.getAddress());
+                        }
+//                        deliveryObjList.addAll(response.getDataList(DeliveryObj.class));
 
 
 //                        deliveryObj = deliveryObjList.get(0);
@@ -195,7 +298,9 @@ public class DeliveryAddressFragment extends BaseFragment implements View.OnClic
 //                        deliveryObj = deliveryObjList.get(2);
 //                        deliveryObj = deliveryObjList.get(3);
 
-                        mAAdapter.addList(deliveryObjList);
+                        mAAdapter.addList(deliveryObjListPickUp);
+                        rbDelivery.setChecked(true);
+
                     }
                     Log.e("TAG", "onError: " + "Success");
                 }
@@ -230,10 +335,13 @@ public class DeliveryAddressFragment extends BaseFragment implements View.OnClic
 
     @Override
     protected void getData() {
+        Log.d("data store manager ", ""+(DataStoreManager.getUser() != null) );
+        Log.d("data store manager- ", ""+AddressManager.getInstance().getArray().size() );
         if (DataStoreManager.getUser() != null && AddressManager.getInstance().getArray().size() == 0) {
             name = DataStoreManager.getUser().getName();
             phone = DataStoreManager.getUser().getPhone();
             address = DataStoreManager.getUser().getAddress();
+
             if (name != null && phone != null && address != null) {
                 AddressManager.getInstance().addItem(new Person(name, phone, address));
             }
@@ -245,10 +353,18 @@ public class DeliveryAddressFragment extends BaseFragment implements View.OnClic
             personList = AddressManager.getInstance().getArray();
             mAdapter.addList(personList);
         }
+        name = DataStoreManager.getUser().getName();
+        phone = DataStoreManager.getUser().getPhone();
+        address = DataStoreManager.getUser().getAddress();
+        tvNameDelivery.setText(name);
+        tvAddressDelivery.setText(address);
+        tvNumberDelivery.setText(phone);
         if (AddressManager.getInstance().getArray().size() != 0) {
             lnl_add.setVisibility(View.GONE);
+            llDelivery.setVisibility(View.VISIBLE);
         } else {
             lnl_add.setVisibility(View.VISIBLE);
+            llDelivery.setVisibility(View.GONE);
         }
     }
 
@@ -256,10 +372,10 @@ public class DeliveryAddressFragment extends BaseFragment implements View.OnClic
     public void onClick(View view) {
         FragmentTransaction fragmentTransaction = mCartActivity.getSupportFragmentManager().beginTransaction();
         if (view == btn_Next) {
-            if (!deliveryObjList.get(0).isSelected()
-                    && !deliveryObjList.get(1).isSelected()
-                    && !deliveryObjList.get(2).isSelected()
-                    && !deliveryObjList.get(3).isSelected()) {
+            if (!deliveryObjListPickUp.get(0).isSelected()
+                    && !deliveryObjListPickUp.get(1).isSelected()
+                    && !deliveryObjListPickUp.get(2).isSelected()
+                    && !deliveryObjListPickUp.get(3).isSelected()) {
                 Toast.makeText(self, "Choose shipping method", Toast.LENGTH_LONG).show();
                 return;
             }
@@ -277,7 +393,16 @@ public class DeliveryAddressFragment extends BaseFragment implements View.OnClic
             if (AddressManager.getInstance().getArray().size() == 0) {
                 showDialogInformation();
             }
+        } else if (view == ivEditDelivery) {
+            if (rbDelivery.isChecked()) {
+                showDialogInformation();
+            }
+        } else if (view == ivLocation) {
+            if (rbPickUp.isChecked()) {
+                showDialogDelivery();
+            }
         }
+
     }
 
     private void showDialogInformation() {
@@ -288,6 +413,10 @@ public class DeliveryAddressFragment extends BaseFragment implements View.OnClic
         edtName = dialogOrder.findViewById(R.id.edtName);
         edtPhone = dialogOrder.findViewById(R.id.edtPhone);
         edtAddress = dialogOrder.findViewById(R.id.edtAddress);
+        Person person = personList.get(0);
+        edtName.setText(person.getName());
+        edtAddress.setText(person.getAddress());
+        edtPhone.setText(person.getPhone());
 //        edtTown = dialogOrder.findViewById(R.id.edtTown);
 //        edtCity = dialogOrder.findViewById(R.id.edtCity);
         btnAddAddress = dialogOrder.findViewById(R.id.btn_AddAddress);
@@ -332,8 +461,9 @@ public class DeliveryAddressFragment extends BaseFragment implements View.OnClic
         name = edtName.getText().toString();
         phone = String.valueOf(edtPhone.getText().toString());
         address = edtAddress.getText().toString();
-//        city = edtCity.getText().toString();
-//        town = edtTown.getText().toString();
+        tvNameDelivery.setText(name);
+        tvAddressDelivery.setText(address);
+        tvNumberDelivery.setText(phone);
 
         if (name.isEmpty() || phone.isEmpty() || address.isEmpty()) {
             Toast.makeText(self, "You need to enter all the entries", Toast.LENGTH_LONG).show();
@@ -354,14 +484,19 @@ public class DeliveryAddressFragment extends BaseFragment implements View.OnClic
     }
 
     public void upData() {
+        name = edtName.getText().toString();
+        phone = String.valueOf(edtPhone.getText().toString());
+        address = edtAddress.getText().toString();
         personList = AddressManager.getInstance().getArray();
         personList.set(position, new Person(edtName.getText().toString(), edtPhone.getText().toString(), edtAddress.getText().toString()));
-
-        FragmentTransaction fragmentTransaction = mCartActivity.getSupportFragmentManager().beginTransaction();
-        if (deliveryAddressFragment == null) {
-            deliveryAddressFragment = DeliveryAddressFragment.newInstance();
-        }
-        fragmentTransaction.replace(R.id.frgCart, deliveryAddressFragment).commit();
+        tvNameDelivery.setText(name);
+        tvAddressDelivery.setText(address);
+        tvNumberDelivery.setText(phone);
+//        FragmentTransaction fragmentTransaction = mCartActivity.getSupportFragmentManager().beginTransaction();
+//        if (deliveryAddressFragment == null) {
+//            deliveryAddressFragment = DeliveryAddressFragment.newInstance();
+//        }
+//        fragmentTransaction.replace(R.id.frgCart, deliveryAddressFragment).commit();
         dimisKeyBoard();
 
     }
@@ -378,20 +513,24 @@ public class DeliveryAddressFragment extends BaseFragment implements View.OnClic
 
     private void setNext() {
         Bundle bundle = new Bundle();
-        deliveryObj = new DeliveryObj();
-        for (int i = 0; i < deliveryObjList.size(); i++) {
-            if (deliveryObjList.get(i).isSelected()) {
-                deliveryObj = deliveryObjList.get(i);
+        if (rbPickUp.isChecked()) {
+            deliveryObj = new DeliveryObj();
+            for (int i = 0; i < deliveryObjListPickUp.size(); i++) {
+                if (deliveryObjListPickUp.get(i).isSelected()) {
+                    deliveryObj = deliveryObjListPickUp.get(i);
+                }
             }
         }
+        Log.d("set next ", "--" + deliveryObj.getDescription());
         bundle.putParcelable(Args.KEY_DELIVERY_OBJECT, deliveryObj);
         bundle.putString("TEXT", text);
+
 
         FragmentTransaction fragmentTransaction = ((CartActivity) getActivity()).getSupportFragmentManager().beginTransaction();
 //        if (AddressManager.getInstance().getArray().size() != 0) {
 //            if (soloveFragment == null) {
 //                soloveFragment = SoloveFragment.newInstance();
-//            }
+//            }E
 //            fragmentTransaction.replace(R.id.frgCart, soloveFragment).addToBackStack("soloveFragment").commit();
 //        } else {
 //            Toast.makeText(mCartActivity, "You need to enter the address", Toast.LENGTH_LONG).show();
@@ -405,4 +544,15 @@ public class DeliveryAddressFragment extends BaseFragment implements View.OnClic
 
     }
 
+    private void showDialogDelivery() {
+        final Dialog dialogOrder = DialogUtil.setDialogCustomView(self, R.layout.dialog_delivery, false);
+        RecyclerView rvDelivery = dialogOrder.findViewById(R.id.rvDelivery);
+        CardView cvOkay = dialogOrder.findViewById(R.id.cvOkay);
+        rvDelivery.setLayoutManager(new LinearLayoutManager(getActivity()));
+        rvDelivery.setAdapter(mAAdapter);
+        cvOkay.setOnClickListener(v -> {
+            dialogOrder.dismiss();
+        });
+        dialogOrder.show();
+    }
 }

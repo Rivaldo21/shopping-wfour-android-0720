@@ -199,5 +199,6 @@
     <color name="btn_send_disabled">#8e8e8e</color>
     <color name="color_editText">#F3F4F6</color>
     <color name="color_textHint">#A39E9E</color>
+    <color name="gray">#D9D7D7</color>
 
 </resources>

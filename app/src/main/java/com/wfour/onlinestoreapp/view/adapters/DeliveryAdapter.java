@@ -1,7 +1,9 @@
 package com.wfour.onlinestoreapp.view.adapters;
 
 import android.content.Context;
+
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,11 +50,11 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
         final DeliveryObj deliveryObj = deliveryList.get(position);
         holder.tvName.setText(deliveryObj.getName());
         holder.tvDescription.setText(deliveryObj.getDescription());
-        holder.tvPrice.setText(String.valueOf("$"+deliveryObj.getPrice()));
+        holder.tvPrice.setText(String.valueOf("$" + deliveryObj.getPrice()));
         holder.tvPrice.setVisibility(View.GONE);
         if (deliveryList.get(position).getPrice() >= 1) {
             holder.tvTranspot.setText("Wfour Delivery");
-        }else {
+        } else {
             holder.tvTranspot.setText("Foti iha Loja");
         }
 
@@ -63,16 +65,16 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
         if (position == 1 && deliveryList.get(1).isSelected() && holder.radioButton.isChecked()) {
             lastChecked = holder.radioButton;
             lastCheckedPos = 1;
-        }else if (position == 2 && deliveryList.get(2).isSelected() && holder.radioButton.isChecked()) {
+        } else if (position == 2 && deliveryList.get(2).isSelected() && holder.radioButton.isChecked()) {
             lastChecked = holder.radioButton;
             lastCheckedPos = 2;
-        }else if (position == 3 && deliveryList.get(3).isSelected() && holder.radioButton.isChecked()) {
+        } else if (position == 3 && deliveryList.get(3).isSelected() && holder.radioButton.isChecked()) {
             lastChecked = holder.radioButton;
             lastCheckedPos = 3;
-        }else if (position == 4 && deliveryList.get(4).isSelected() && holder.radioButton.isChecked()) {
+        } else if (position == 4 && deliveryList.get(4).isSelected() && holder.radioButton.isChecked()) {
             lastChecked = holder.radioButton;
             lastCheckedPos = 4;
-        }else if (position == 0 && deliveryList.get(0).isSelected() && holder.radioButton.isChecked()) {
+        } else if (position == 0 && deliveryList.get(0).isSelected() && holder.radioButton.isChecked()) {
             lastChecked = holder.radioButton;
             lastCheckedPos = 0;
         }
@@ -85,7 +87,7 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
                 int clickedPos = ((Integer) cb.getTag()).intValue();
 
                 if (cb.isChecked()) {
-
+                    onClick.onClick(position);
                     if (lastChecked != null) {
                         lastChecked.setChecked(false);
                         deliveryList.get(lastCheckedPos).setSelected(false);
@@ -93,8 +95,7 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
                     lastChecked = cb;
                     lastCheckedPos = clickedPos;
 
-                }
-                else
+                } else
                     lastChecked = null;
 
                 deliveryList.get(clickedPos).setSelected(cb.isChecked());
@@ -146,7 +147,7 @@ public class DeliveryAdapter extends RecyclerView.Adapter<DeliveryAdapter.MyView
             tvDescription = itemView.findViewById(R.id.tvDescription);
             radioButton = itemView.findViewById(R.id.radioButton);
             lnl_container = itemView.findViewById(R.id.lnl_container);
-            tvTranspot    = itemView.findViewById(R.id.tranpost);
+            tvTranspot = itemView.findViewById(R.id.tranpost);
 
         }
     }

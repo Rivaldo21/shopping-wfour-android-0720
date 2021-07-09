@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -90,7 +91,7 @@ public class SoloveFragment extends BaseFragment {
         rdbBankCard = view.findViewById(R.id.RdbBankCard);
         btnNext = view.findViewById(R.id.btnNext);
         toolbar = view.findViewById(R.id.toolbar);
-        radioGroup = view.findViewById(R.id.radioGroup);
+//        radioGroup = view.findViewById(R.id.radioGroup);
         tvDescription = view.findViewById(R.id.tvDescription);
         tvPrice = view.findViewById(R.id.tvPrice);
         tvName = view.findViewById(R.id.tvName);
@@ -101,40 +102,27 @@ public class SoloveFragment extends BaseFragment {
         mCartActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mCartActivity.setTitle("Metode Pagamentu");
 
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int i) {
-                //doOnDifficultyLevelChanged(radioGroup,i);
-            }
-        });
-        initDeliveryList();
-        mAdapter = new DeliveryAdapter(self, deliveryObjList, new MyOnClickDelivery() {
-
-            @Override
-            public void onClick(int position) {
-                deliveryObj = new DeliveryObj();
-                deliveryObj = deliveryObjList.get(position);
-            }
-        });
+//        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+//                //doOnDifficultyLevelChanged(radioGroup,i);
+//            }
+//        });
+//        initDeliveryList();
+//        mAdapter = new DeliveryAdapter(self, deliveryObjList, new MyOnClickDelivery() {
+//
+//            @Override
+//            public void onClick(int position) {
+//                deliveryObj = new DeliveryObj();
+//                deliveryObj = deliveryObjList.get(position);
+//            }
+//        });
         Bundle bundle1 = getArguments();
         deliveryObj = bundle1.getParcelable(Args.KEY_DELIVERY_OBJECT);
 
-//
-//        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(self);
-//        rcv_data.setLayoutManager(layoutManager);
-//        rcv_data.setAdapter(mAdapter);
-//        rcv_data.setNestedScrollingEnabled(false);
-//        mAdapter.notifyDataSetChanged();
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                if (!deliveryObjList.get(0).isSelected()
-//                        && !deliveryObjList.get(1).isSelected()
-//                        && !deliveryObjList.get(2).isSelected()
-//                        && !deliveryObjList.get(3).isSelected()) {
-//                    Toast.makeText(self, "Choose shipping method", Toast.LENGTH_LONG).show();
-//                    return;
-//                }
                 if (!rdbBankCard.isChecked() && !rdbMoney.isChecked()) {
 
                 } else {
@@ -151,7 +139,16 @@ public class SoloveFragment extends BaseFragment {
                 }
             }
         });
-
+        rdbBankCard.setOnCheckedChangeListener((compoundButton, b) -> {
+            if(b){
+                rdbMoney.setChecked(false);
+            }
+        });
+        rdbMoney.setOnCheckedChangeListener((compoundButton, b) -> {
+            if(b){
+                rdbBankCard.setChecked(false);
+            }
+        });
 
     }
 

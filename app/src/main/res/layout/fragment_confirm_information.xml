@@ -96,6 +96,78 @@
                 android:paddingBottom="@dimen/dimen_1x">
 
                 <TextView
+                    android:id="@+id/tvNameDelivery"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/inter_medium"
+                    android:text="Enderesu Wfour"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_normal" />
+
+                <TextView
+                    android:id="@+id/tvDelivery"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_1x"
+                    android:text="Giao hang tieu chuan"
+                    android:textSize="@dimen/text_size_normal" />
+
+                <RelativeLayout
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_1x"
+                    android:background="@color/white"
+                    android:paddingBottom="@dimen/dimen_1x">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:text="Transporte Fee"
+                        android:textSize="@dimen/text_size_normal" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:orientation="horizontal">
+
+                        <TextView
+
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="@dimen/dimen_1x"
+                            android:text="$"
+                            android:textSize="@dimen/text_size_xnormal" />
+
+                        <TextView
+                            android:id="@+id/tvTransportFee"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="@dimen/dimen_1x"
+                            android:text="3"
+                            android:textSize="@dimen/text_size_xnormal" />
+                    </LinearLayout>
+
+
+                </RelativeLayout>
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_1x"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/dimen_1x"
+                android:paddingTop="@dimen/dimen_1x"
+                android:paddingBottom="@dimen/dimen_1x">
+
+                <TextView
                     android:id="@+id/tv_info"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -140,78 +212,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_1x"
-                android:background="@color/white"
-                android:orientation="vertical"
-                android:paddingLeft="@dimen/dimen_1x"
-                android:paddingTop="@dimen/dimen_1x"
-                android:paddingBottom="@dimen/dimen_1x">
-
-                <TextView
-                    android:id="@+id/tvNameDelivery"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/inter_medium"
-                    android:text="Enderesu Wfour"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/text_size_normal" />
-
-                <TextView
-                    android:id="@+id/tvDelivery"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_1x"
-                    android:text="Giao hang tieu chuan"
-                    android:textSize="@dimen/text_size_normal" />
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_1x"
-                    android:background="@color/white"
-                    android:paddingBottom="@dimen/dimen_1x">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:text="Transporte Fee"
-                        android:textSize="@dimen/text_size_normal" />
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:orientation="horizontal">
-
-                        <TextView
-
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_marginRight="@dimen/dimen_1x"
-                            android:text="$"
-                            android:textSize="@dimen/text_size_xnormal" />
-
-                        <TextView
-                            android:id="@+id/tvTransportFee"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_marginRight="@dimen/dimen_1x"
-                            android:text="3"
-                            android:textSize="@dimen/text_size_xnormal" />
-                    </LinearLayout>
-
-
-                </RelativeLayout>
-
-
-            </LinearLayout>
-
-            <LinearLayout
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dimen_1x"
