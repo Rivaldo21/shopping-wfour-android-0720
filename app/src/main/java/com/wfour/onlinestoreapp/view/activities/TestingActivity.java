@@ -1,6 +1,7 @@
 package com.wfour.onlinestoreapp.view.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 
@@ -17,7 +18,10 @@ public class TestingActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                startActivity(new Intent(TestingActivity.this, MainActivity.class));
+                String url="https://www.youtube.com/watch?v=TQTlCHxyuu8";
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube://" + "TQTlCHxyuu8"));
+                startActivity(intent);
+//                startActivity(new Intent(TestingActivity.this, MainActivity.class));
             }
         }, 5000);
 

@@ -8,7 +8,7 @@
     app:layout_scrollFlags = "enterAlways"
     app:popupTheme="@style/AppTheme.PopupOverlay"
     app:theme="@style/ToolbarStyle"
-    android:background="@color/colorPrimary">
+    android:background="@color/colorPrimaryDark">
 
     <TextView
         android:id="@+id/tv_title"

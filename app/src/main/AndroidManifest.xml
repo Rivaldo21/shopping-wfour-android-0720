@@ -281,6 +281,8 @@
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:screenOrientation="portrait"
             android:theme="@style/AppNoActionBar" /> <!-- Google map -->
+        <activity android:name=".view.activities.ParentWebview"
+            android:screenOrientation="portrait"/>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/own_google_api_key" />

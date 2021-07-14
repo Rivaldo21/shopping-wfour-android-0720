@@ -414,6 +414,7 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/rlFaq"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp">
@@ -450,6 +451,7 @@
             android:background="@color/dividerColor" />
 
         <RelativeLayout
+            android:id="@+id/rlHelp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp">
@@ -486,6 +488,7 @@
             android:background="@color/dividerColor" />
 
         <RelativeLayout
+            android:id="@+id/rlAboutUs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp">

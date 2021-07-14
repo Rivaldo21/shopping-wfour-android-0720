@@ -194,7 +194,7 @@ public class HomeFragment extends BaseFragment implements IOnItemClickListener, 
         getData();
         //initViewPager(view);
         initHomeList(view);
-        initSearch(view);
+         initSearch(view);
         setAppBar(view);
     }
 

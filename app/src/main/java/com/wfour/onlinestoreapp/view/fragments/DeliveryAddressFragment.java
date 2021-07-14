@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentTransaction;
@@ -62,7 +63,8 @@ public class DeliveryAddressFragment extends BaseFragment implements View.OnClic
     }
 
     private Toolbar toolbar;
-    private TextView btn_Next, btnAddAddress, tvTitle;
+    private AppCompatButton btn_Next;
+    private TextView btnAddAddress, tvTitle;
     private EditText edtName, edtPhone, edtAddress, edtCity, edtTown;
     private LinearLayout lnl_add, llDelivery;
     private ArrayList<Person> personList;
@@ -126,7 +128,8 @@ public class DeliveryAddressFragment extends BaseFragment implements View.OnClic
         toolbar = view.findViewById(R.id.toolbar);
         mCartActivity.setSupportActionBar(toolbar);
         mCartActivity.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        mCartActivity.setTitle(R.string.delivery_address);
+//        mCartActivity.setTitle(R.string.delivery_address);
+        mCartActivity.setTitle("Addresses");
 
         btn_Next = view.findViewById(R.id.btn_Next);
         rbPickUp = view.findViewById(R.id.rbPickUp);
@@ -316,11 +319,11 @@ public class DeliveryAddressFragment extends BaseFragment implements View.OnClic
         }
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_go_home, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
+//    @Override
+//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        inflater.inflate(R.menu.menu_go_home, menu);
+//        super.onCreateOptionsMenu(menu, inflater);
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

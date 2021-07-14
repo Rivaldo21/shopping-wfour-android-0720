@@ -2,6 +2,7 @@ package com.wfour.onlinestoreapp.view.fragments;
 
 import android.os.Bundle;
 
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -45,7 +46,8 @@ public class SoloveFragment extends BaseFragment {
 
     private RadioButton rdbMoney, rdbBankCard;
     private RadioGroup radioGroup;
-    private TextView btnNext, tvDescription, tvPrice, tvName;
+    private AppCompatButton btnNext;
+    private TextView  tvDescription, tvPrice, tvName;
     private String text;
     private Toolbar toolbar;
     private CartActivity mCartActivity;
@@ -170,11 +172,11 @@ public class SoloveFragment extends BaseFragment {
         fragmentTransaction.add(R.id.frgCart, confirmInformationFragment).addToBackStack("ConfirmInformationFragment").commit();
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_go_home, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
+//    @Override
+//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        inflater.inflate(R.menu.menu_go_home, menu);
+//        super.onCreateOptionsMenu(menu, inflater);
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

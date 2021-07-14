@@ -148,6 +148,7 @@ public class LoginChatActivity extends BaseActivity {
 
     private void connectToSendBird(final String userId, final String userNickname) {
         // Show the loading indicator
+        Log.d("connecting to server","-------");
         showProgressBar(true);
         mConnectButton.setEnabled(false);
 
@@ -177,7 +178,7 @@ public class LoginChatActivity extends BaseActivity {
                 updateCurrentUserPushToken();
 
                 // Proceed to MainActivity
-                Log.e(TAG, "onConnected: " + userId + "getUserID" + user.getUserId());
+                Log.e(TAG, "onConnected: " + userId + " getUserID " + user.getUserId());
 
 //                Intent intent = new Intent(self, GroupChannelActivity.class);
 //                Bundle bundle = new Bundle();
@@ -186,7 +187,7 @@ public class LoginChatActivity extends BaseActivity {
 //                startActivity(intent);
 //                finish();
 
-                if ("1".equals(user.getUserId()) && DataStoreManager.getUser().getRole() == 30) {
+//                if ("1".equals(user.getUserId()) && DataStoreManager.getUser().getRole() == 30) {
                     Intent intent = new Intent(self, GroupChannelActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putString("userId", user.getUserId());
@@ -194,15 +195,15 @@ public class LoginChatActivity extends BaseActivity {
                     intent.putExtras(bundle);
                     startActivity(intent);
                     finish();
-                }else if (DataStoreManager.getUser().getRole() != 30){
-                    Intent intent = new Intent(self, GroupChannelActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("userId", user.getUserId());
-                    bundle.putParcelable(Args.KEY_DEAL_OBJECT, LoginChatActivity.this.item);
-                    intent.putExtras(bundle);
-                    startActivity(intent);
-                    finish();
-                }
+//                }else if (DataStoreManager.getUser().getRole() != 30){
+//                    Intent intent = new Intent(self, GroupChannelActivity.class);
+//                    Bundle bundle = new Bundle();
+//                    bundle.putString("userId", user.getUserId());
+//                    bundle.putParcelable(Args.KEY_DEAL_OBJECT, LoginChatActivity.this.item);
+//                    intent.putExtras(bundle);
+//                    startActivity(intent);
+//                    finish();
+//                }
             }
         });
     }

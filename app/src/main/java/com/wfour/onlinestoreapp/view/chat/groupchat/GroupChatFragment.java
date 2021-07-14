@@ -10,15 +10,20 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.snackbar.Snackbar;
+
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -34,6 +39,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.sendbird.android.AdminMessage;
 import com.sendbird.android.BaseChannel;
 import com.sendbird.android.BaseMessage;
@@ -45,7 +51,12 @@ import com.sendbird.android.SendBird;
 import com.sendbird.android.SendBirdException;
 import com.sendbird.android.UserMessage;
 import com.wfour.onlinestoreapp.R;
+import com.wfour.onlinestoreapp.objects.ItemMessage;
+import com.wfour.onlinestoreapp.objects.ProductObj;
+import com.wfour.onlinestoreapp.utils.StringUtil;
+import com.wfour.onlinestoreapp.view.adapters.ChatTemplateAdapter;
 import com.wfour.onlinestoreapp.view.chat.chatutils.FileUtils;
+import com.wfour.onlinestoreapp.view.chat.chatutils.ImageUtils;
 import com.wfour.onlinestoreapp.view.chat.chatutils.MediaPlayerActivity;
 import com.wfour.onlinestoreapp.view.chat.chatutils.PhotoViewerActivity;
 import com.wfour.onlinestoreapp.view.chat.chatutils.PreferenceUtils;
@@ -53,6 +64,7 @@ import com.wfour.onlinestoreapp.view.chat.chatutils.TextUtils;
 import com.wfour.onlinestoreapp.view.chat.chatutils.UrlPreviewInfo;
 import com.wfour.onlinestoreapp.view.chat.chatutils.WebUtils;
 import com.wfour.onlinestoreapp.view.chat.mainchat.ConnectionManager;
+
 import static com.wfour.onlinestoreapp.view.chat.groupchat.GroupChannelActivity.item;
 
 import org.json.JSONException;
@@ -84,10 +96,13 @@ public class GroupChatFragment extends Fragment {
     private HashMap<BaseChannel.SendFileMessageWithProgressHandler, FileMessage> mFileProgressHandlerMap;
 
     private RelativeLayout mRootLayout;
-    private RecyclerView mRecyclerView;
+    private RecyclerView mRecyclerView, rvChatTemplate;
     private GroupChatAdapter mChatAdapter;
+    private ChatTemplateAdapter templateAdapter;
     private LinearLayoutManager mLayoutManager;
     private EditText mMessageEditText;
+    private RelativeLayout rlProduct;
+
     private RelativeLayout mMessageSendButton;
     private ImageButton mUploadFileButton;
     private View mCurrentEventLayout;
@@ -147,26 +162,43 @@ public class GroupChatFragment extends Fragment {
 
         setRetainInstance(true);
 
-        mRootLayout         = (RelativeLayout) rootView.findViewById(R.id.layout_group_chat_root);
-        mRecyclerView       = (RecyclerView) rootView.findViewById(R.id.recycler_group_chat);
+        mRootLayout = (RelativeLayout) rootView.findViewById(R.id.layout_group_chat_root);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_group_chat);
+        rvChatTemplate = (RecyclerView) rootView.findViewById(R.id.rvChatTemplate);
 
         mCurrentEventLayout = rootView.findViewById(R.id.layout_group_chat_current_event);
-        mCurrentEventText   = (TextView) rootView.findViewById(R.id.text_group_chat_current_event);
+        mCurrentEventText = (TextView) rootView.findViewById(R.id.text_group_chat_current_event);
 //        tvNameProduct       = rootView.findViewById(R.id.tv_name_product);
 //        tvPrice             = rootView.findViewById(R.id.tv_price);
 //        tvDeal              = rootView.findViewById(R.id.tv_price_deal);
 //        imgProduct          = rootView.findViewById(R.id.img_product);
 
-        mMessageEditText    = (EditText) rootView.findViewById(R.id.edittext_group_chat_message);
+        mMessageEditText = (EditText) rootView.findViewById(R.id.edittext_group_chat_message);
+        TextView tvNameProductRl = rootView.findViewById(R.id.tvNameProduct);
+        TextView tvPriceProduct = rootView.findViewById(R.id.tvPriceProduct);
+        ImageView ivItemProduct = rootView.findViewById(R.id.ivItemProduct);
+        ImageView ivClose = rootView.findViewById(R.id.ivClose);
+        rlProduct = rootView.findViewById(R.id.rlProduct);
+        ivClose.setOnClickListener(v -> {
+            item = null;
+            rlProduct.setVisibility(View.GONE);
+        });
         if (item != null) {
-            mMessageEditText.setText("id:"+item.getId() + " \n" + "product name:"+item.getTitle() + "\n" + "$"+item.getPrice());
-        }else {
+            rlProduct.setVisibility(View.VISIBLE);
+            tvNameProductRl.setText(item.getTitle());
+            tvPriceProduct.setText(" $" + StringUtil.convertNumberToString(item.getPrice(), 2));
+            ImageUtils.displayImageFromUrl(getActivity(), item.getImage(), ivItemProduct, null);
+//            mMessageEditText.setText("id:"+item.getId() + " \n" + "product name:"+item.getTitle() + "\n" + "$"+item.getPrice()+ "\n" + ""+item.getImage().replace("https://wfour.store/",""));
+//            mMessageEditText.setText(item.getId() + "," + item.getTitle() + "," + item.getPrice() + "," + item.getImage().replace("https://wfour.store/", ""));
+
+
+        } else {
+            rlProduct.setVisibility(View.GONE);
             mMessageEditText.setText("");
         }
-        Log.e("TAG", "onCreateView: " + mMessageEditText.getText().length() );
-        mMessageSendButton  =  rootView.findViewById(R.id.button_group_chat_send);
-        mUploadFileButton   = (ImageButton) rootView.findViewById(R.id.button_group_chat_upload);
-        mMessageSendButton.setEnabled(false);
+        Log.e("TAG", "onCreateView: " + mMessageEditText.getText().length());
+        mMessageSendButton = rootView.findViewById(R.id.button_group_chat_send);
+        mUploadFileButton = (ImageButton) rootView.findViewById(R.id.button_group_chat_upload);
 
         mMessageEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -208,12 +240,13 @@ public class GroupChatFragment extends Fragment {
 ////            Glide.with(getContext()).load(item.getImage()).into(imgProduct);
 //        }
         send();
-
+        rvChatTemplate.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        rvChatTemplate.setAdapter(new ChatTemplateAdapter(generateTemplateString(), text -> mMessageEditText.setText(text)));
         new Handler().postDelayed(new Runnable() {
 
             @Override
             public void run() {
-                mMessageSendButton.performClick();
+//                mMessageSendButton.performClick();
             }
         }, 100);
 
@@ -254,25 +287,44 @@ public class GroupChatFragment extends Fragment {
         return rootView;
     }
 
-    private void send(){
+    private ArrayList<String> generateTemplateString() {
+        ArrayList<String> templates = new ArrayList<>();
+        templates.add("Hai, barang ini ready ga?");
+        templates.add("Bisa dikirim hari ini?");
+        templates.add("Bisa diantar sekarang?");
+        return templates;
+    }
+
+    private void send() {
         mMessageSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mCurrentState == STATE_EDIT) {
-                    String userInput = mMessageEditText.getText().toString();
-                    if (userInput.length() > 0) {
-                        if (mEditingMessage != null) {
-                            editMessage(mEditingMessage, userInput);
+                    String userInput;
+                    if (item != null) {
+                        userInput = item.getId() + ",,," + item.getTitle() + ",,," + item.getPrice() + ",,," + item.getImage().replace("https://wfour.store/", "") + ",,," + mMessageEditText.getText().toString();
+                    } else {
+                        userInput = mMessageEditText.getText().toString();
+                    }
+                    if (mMessageEditText.getText().toString().length() > 0) {
+                        editMessage(mEditingMessage, userInput);
+                        item = null;
+                        Log.e("sendmessage", "onClick: 1" + userInput);
 
-                            Log.e("sendmessage", "onClick: 1" + userInput);
-                        }
                     }
                     setState(STATE_NORMAL, null, -1);
                 } else {
-                    String userInput = mMessageEditText.getText().toString();
-                    if (userInput.length() > 0) {
+                    String userInput;
+                    if (item != null) {
+                        userInput = item.getId() + ",,," + item.getTitle() + ",,," + item.getPrice() + ",,," + item.getImage().replace("https://wfour.store/", "") + ",,," + mMessageEditText.getText().toString();
+                    } else {
+                        userInput = mMessageEditText.getText().toString();
+                    }
+                    if (mMessageEditText.getText().toString().length() > 0) {
                         sendUserMessage(userInput);
                         mMessageEditText.setText("");
+                        item = null;
+                        rlProduct.setVisibility(View.GONE);
                         Log.e("sendmessage", "onClick: 2 " + userInput);
                     }
                 }
@@ -349,7 +401,7 @@ public class GroupChatFragment extends Fragment {
                     mChatAdapter.markAllMessagesAsRead();
                     // Add new message to view
                     mChatAdapter.addFirst(baseMessage);
-                    Log.e("Message", "onMessageReceived: ONMESSAGEEEEEE" + baseMessage  );
+                    Log.e("Message", "onMessageReceived: ONMESSAGEEEEEE" + baseMessage);
                 }
             }
 
@@ -366,7 +418,7 @@ public class GroupChatFragment extends Fragment {
                 super.onMessageUpdated(channel, message);
                 if (channel.getUrl().equals(mChannelUrl)) {
                     mChatAdapter.update(message);
-                    Log.e("Update", "onMessageUpdated: " + message );
+                    Log.e("Update", "onMessageUpdated: " + message);
                 }
             }
 
@@ -533,7 +585,7 @@ public class GroupChatFragment extends Fragment {
     }
 
     private void showMessageOptionsDialog(final BaseMessage message, final int position) {
-        String[] options = new String[] { "Edit message", "Delete message" };
+        String[] options = new String[]{"Edit message", "Delete message"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setItems(options, new DialogInterface.OnClickListener() {
@@ -566,9 +618,18 @@ public class GroupChatFragment extends Fragment {
 
                 mUploadFileButton.setVisibility(View.GONE);
 //                mMessageSendButton.setText("SAVE");
-                String messageString = ((UserMessage)editingMessage).getMessage();
+                String messageString = ((UserMessage) editingMessage).getMessage();
                 if (messageString == null) {
                     messageString = "";
+                }
+                String[] messageData = messageString.split(",,,");
+                if (messageData.length == 5) {
+                    item= new ProductObj();
+                    item.setId(messageData[0]);
+                    item.setTitle(messageData[1]);
+                    item.setPrice(Float.parseFloat(messageData[2]));
+                    item.setImage(messageData[3]);
+                    messageString = messageData[4];
                 }
                 mMessageEditText.setText(messageString);
                 if (messageString.length() > 0) {
@@ -596,7 +657,7 @@ public class GroupChatFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        ((GroupChannelActivity)context).setOnBackPressedListener(new GroupChannelActivity.onBackPressedListener() {
+        ((GroupChannelActivity) context).setOnBackPressedListener(new GroupChannelActivity.onBackPressedListener() {
             @Override
             public boolean onBack() {
                 if (mCurrentState == STATE_EDIT) {
@@ -612,7 +673,7 @@ public class GroupChatFragment extends Fragment {
 
     @Override
     public void onDetach() {
-        Log.e("TAG DETACH", "onDetach: " );
+        Log.e("TAG DETACH", "onDetach: ");
         super.onDetach();
         item = null;
     }
@@ -763,7 +824,7 @@ public class GroupChatFragment extends Fragment {
     private void updateActionBarTitle() {
         String title = "";
 
-        if(mChannel != null) {
+        if (mChannel != null) {
             title = TextUtils.getGroupChannelTitle(mChannel);
         }
 
@@ -818,7 +879,7 @@ public class GroupChatFragment extends Fragment {
     private void sendUserMessage(String text) {
         List<String> urls = WebUtils.extractUrls(text);
         if (urls.size() > 0) {
-            Log.e("TAG GROUP", "sendUserMessage: " + urls );
+            Log.e("TAG GROUP", "sendUserMessage: " + urls);
             sendUserMessageWithUrl(text, urls.get(0));
             return;
         }
@@ -971,5 +1032,9 @@ public class GroupChatFragment extends Fragment {
                 });
             }
         });
+    }
+
+    public interface TemplateInterface {
+        public void onclick(String text);
     }
 }

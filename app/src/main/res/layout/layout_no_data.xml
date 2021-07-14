@@ -41,7 +41,7 @@
                         android:gravity="center"
                         android:text="Presiza atu sosa sasan  ?"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_normal"
+                        android:textSize="@dimen/text_size_xnormal"
                         android:textStyle="bold" />
 
                     <TextView
@@ -53,7 +53,7 @@
                         android:gravity="center"
                         android:text="Yup, aumenta sasan ba Karosa kompra agora"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/text_size_normal" />
+                        android:textSize="@dimen/text_size_xnormal" />
 
                     <TextView
                         android:id="@+id/shop_now_textview"
@@ -91,7 +91,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:fontFamily="@font/inter_extrabold"
-                    android:text="Last Seen"
+                    android:text="Rekomenda ba o"
                     android:textColor="@color/text_black"
                     android:textSize="@dimen/text_size_normal" />
 

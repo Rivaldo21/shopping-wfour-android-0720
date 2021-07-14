@@ -1,6 +1,7 @@
 package com.wfour.onlinestoreapp.view.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
@@ -38,6 +39,8 @@ public class WebViewFragment extends com.wfour.onlinestoreapp.base.BaseFragment 
         title = bundle.getString(Constants.KEY_TITLE);
 
         url = bundle.getString(Constants.KEY_URL);
+        Log.d("showScreenFaq ", "->>"+url);
+
     }
 
     @Override

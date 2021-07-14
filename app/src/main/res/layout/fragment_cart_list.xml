@@ -9,15 +9,15 @@
     <RelativeLayout
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/red">
+        android:layout_height="?actionBarSize"
+        android:background="@color/colorPrimaryDark">
 
         <ImageView
             android:id="@+id/back_imageview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="16dp"
             android:src="@drawable/ic_arrow_back_black_24dp" />
 
         <TextView
@@ -26,9 +26,9 @@
             android:text="Karosa Kompra"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/back_imageview"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="32dp"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_size_large"
+            android:textSize="@dimen/text_size_xlarge"
             android:textStyle="bold"></TextView>
     </RelativeLayout>
 

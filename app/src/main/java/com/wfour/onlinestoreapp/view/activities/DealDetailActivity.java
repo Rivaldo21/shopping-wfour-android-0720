@@ -294,7 +294,8 @@ public class DealDetailActivity extends com.wfour.onlinestoreapp.base.BaseActivi
         if (DataStoreManager.getUser() == null) {
             circleImageViewMessage.setVisibility(View.VISIBLE);
         } else if (DataStoreManager.getUser().getRole() == 30) {
-            circleImageViewMessage.setVisibility(View.GONE);
+//            circleImageViewMessage.setVisibility(View.GONE);
+            circleImageViewMessage.setVisibility(View.VISIBLE);
         } else {
             circleImageViewMessage.setVisibility(View.VISIBLE);
         }

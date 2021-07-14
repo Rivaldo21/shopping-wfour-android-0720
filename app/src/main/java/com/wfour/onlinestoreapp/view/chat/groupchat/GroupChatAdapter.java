@@ -2,8 +2,12 @@ package com.wfour.onlinestoreapp.view.chat.groupchat;
 
 import android.content.Context;
 import android.net.Uri;
+
+import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +25,7 @@ import com.sendbird.android.SendBirdException;
 import com.sendbird.android.User;
 import com.sendbird.android.UserMessage;
 import com.wfour.onlinestoreapp.R;
+import com.wfour.onlinestoreapp.utils.StringUtil;
 import com.wfour.onlinestoreapp.view.chat.chatutils.DateUtils;
 import com.wfour.onlinestoreapp.view.chat.chatutils.FileUtils;
 import com.wfour.onlinestoreapp.view.chat.chatutils.ImageUtils;
@@ -620,11 +625,13 @@ class GroupChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     private class MyUserMessageHolder extends RecyclerView.ViewHolder {
-        TextView messageText, editedText, timeText, readReceiptText, dateText;
+        TextView messageText, editedText, timeText, readReceiptText, dateText, tvMessage;
         ViewGroup urlPreviewContainer;
-        TextView urlPreviewSiteNameText, urlPreviewTitleText, urlPreviewDescriptionText;
-        ImageView urlPreviewMainImageView;
+        TextView urlPreviewSiteNameText, urlPreviewTitleText, urlPreviewDescriptionText, tvNameProduct, tvPriceProduct;
+        ImageView urlPreviewMainImageView, ivItemProduct;
         View padding;
+        CardView card_group_chat_message;
+        ConstraintLayout clProduct;
 
         MyUserMessageHolder(View itemView) {
             super(itemView);
@@ -634,112 +641,123 @@ class GroupChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             timeText = (TextView) itemView.findViewById(R.id.text_group_chat_time);
             readReceiptText = (TextView) itemView.findViewById(R.id.text_group_chat_read_receipt);
             dateText = (TextView) itemView.findViewById(R.id.text_group_chat_date);
+            tvMessage = (TextView) itemView.findViewById(R.id.tvMessage);
 
             urlPreviewContainer = (ViewGroup) itemView.findViewById(R.id.url_preview_container);
             urlPreviewSiteNameText = (TextView) itemView.findViewById(R.id.text_url_preview_site_name);
             urlPreviewTitleText = (TextView) itemView.findViewById(R.id.text_url_preview_title);
             urlPreviewDescriptionText = (TextView) itemView.findViewById(R.id.text_url_preview_description);
             urlPreviewMainImageView = (ImageView) itemView.findViewById(R.id.image_url_preview_main);
+            ivItemProduct = (ImageView) itemView.findViewById(R.id.ivItemProduct);
+            card_group_chat_message = (CardView) itemView.findViewById(R.id.card_group_chat_message);
+            tvPriceProduct = (TextView) itemView.findViewById(R.id.tvPriceProduct);
+            tvNameProduct = (TextView) itemView.findViewById(R.id.tvNameProduct);
+            clProduct = (ConstraintLayout) itemView.findViewById(R.id.clProduct);
 
             // Dynamic padding that can be hidden or shown based on whether the message is continuous.
             padding = itemView.findViewById(R.id.view_group_chat_padding);
         }
 
         void bind(Context context, final UserMessage message, GroupChannel channel, boolean isContinuous, boolean isNewDay, boolean isTempMessage, boolean isFailedMessage, final OnItemClickListener clickListener, final OnItemLongClickListener longClickListener, final int position) {
-            messageText.setText(message.getMessage());
             timeText.setText(DateUtils.formatTime(message.getCreatedAt()));
-//            Log.e("TAG", "bind: Data" + message.getData());
-//            Log.e("TAG ADAPTER", "bind: Customtype" + message.getCustomType() );
-//            Log.e("TAG 222222", "bind: message " + message.getMessage());
-//            Log.e("TAG 222222", "bind: id" + message.getMessageId());
-//            Log.e("TAG 222222", "bind: chanUrl" + message.getChannelUrl());
-
-            if (message.getUpdatedAt() > 0) {
-                editedText.setVisibility(View.VISIBLE);
-            } else {
-                editedText.setVisibility(View.GONE);
+            String [] messageData =message.getMessage().split(",,,");
+            for (String s : messageData) {
+                Log.d("bind", "getMessage= " + s+" ->"+message.getMessage().split(",", 0).length);
             }
 
-            if (isFailedMessage) {
-                readReceiptText.setText(R.string.message_failed);
-                readReceiptText.setVisibility(View.VISIBLE);
-            } else if (isTempMessage) {
-                readReceiptText.setText(R.string.message_sending);
-                readReceiptText.setVisibility(View.VISIBLE);
-            } else {
-
-                // Since setChannel is set slightly after adapter is created
-                if (channel != null) {
-                    int readReceipt = channel.getReadReceipt(message);
-                    if (readReceipt > 0) {
-                        readReceiptText.setVisibility(View.VISIBLE);
-                        readReceiptText.setText(String.valueOf(readReceipt));
-                    } else {
-                        readReceiptText.setVisibility(View.INVISIBLE);
+            if (message.getMessage().split(",,,").length !=5) {
+                card_group_chat_message.setVisibility(View.VISIBLE);
+                clProduct.setVisibility(View.GONE);
+                messageText.setText(message.getMessage());
+            }else{
+                card_group_chat_message.setVisibility(View.GONE);
+                clProduct.setVisibility(View.VISIBLE);
+                if(messageData.length<=5){
+                    tvNameProduct.setText(messageData[1]);
+                    tvPriceProduct.setText(" $" + StringUtil.convertNumberToString(Float.parseFloat(messageData[2]), 2));
+                    ImageUtils.displayImageFromUrl(context,"https://wfour.store/"+ messageData[3], ivItemProduct, null);
+                    if(messageData.length==5){
+                        tvMessage.setText(messageData[4]);
                     }
                 }
-            }
 
-            // If continuous from previous message, remove extra padding.
-            if (isContinuous) {
-                padding.setVisibility(View.GONE);
-            } else {
-                padding.setVisibility(View.VISIBLE);
             }
-
-            // If the message is sent on a different date than the previous one, display the date.
-            if (isNewDay) {
-                dateText.setVisibility(View.VISIBLE);
-                dateText.setText(DateUtils.formatDate(message.getCreatedAt()));
-            } else {
-                dateText.setVisibility(View.GONE);
-            }
-
-            urlPreviewContainer.setVisibility(View.GONE);
-            if (message.getCustomType().equals(URL_PREVIEW_CUSTOM_TYPE)) {
-                try {
-                    urlPreviewContainer.setVisibility(View.VISIBLE);
-                    final UrlPreviewInfo previewInfo = new UrlPreviewInfo(message.getData());
-                    urlPreviewSiteNameText.setText("@" + previewInfo.getSiteName());
-                    urlPreviewTitleText.setText(previewInfo.getTitle());
-                    urlPreviewDescriptionText.setText(previewInfo.getDescription());
-                    ImageUtils.displayImageFromUrl(context, previewInfo.getImageUrl(), urlPreviewMainImageView, null);
-                } catch (JSONException e) {
-                    urlPreviewContainer.setVisibility(View.GONE);
-                    e.printStackTrace();
+                if (message.getUpdatedAt() > 0) {
+                    editedText.setVisibility(View.VISIBLE);
+                } else {
+                    editedText.setVisibility(View.GONE);
                 }
-            }
 
-//            if (item != null) {
-//                Log.e(TAG, "bind: " +  item.getTitle());
-//                Log.e(TAG, "bind: " +  item.getOld_price());
-//                urlPreviewContainer.setVisibility(View.VISIBLE);
-//                urlPreviewSiteNameText.setText(item.getTitle());
-//                urlPreviewDescriptionText.setText(String.valueOf(item.getOld_price()));
-//                urlPreviewDescriptionText.setText(String.valueOf(item.getPrice()));
-//                ImageUtils.displayImageFromUrl(context, item.getImage(), urlPreviewMainImageView, null);
-//            }else {
-//                urlPreviewContainer.setVisibility(View.GONE);
-//            }
+                if (isFailedMessage) {
+                    readReceiptText.setText(R.string.message_failed);
+                    readReceiptText.setVisibility(View.VISIBLE);
+                } else if (isTempMessage) {
+                    readReceiptText.setText(R.string.message_sending);
+                    readReceiptText.setVisibility(View.VISIBLE);
+                } else {
 
-            if (clickListener != null) {
-                itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        clickListener.onUserMessageItemClick(message);
+                    // Since setChannel is set slightly after adapter is created
+                    if (channel != null) {
+                        int readReceipt = channel.getReadReceipt(message);
+                        if (readReceipt > 0) {
+                            readReceiptText.setVisibility(View.VISIBLE);
+                            readReceiptText.setText(String.valueOf(readReceipt));
+                        } else {
+                            readReceiptText.setVisibility(View.INVISIBLE);
+                        }
                     }
-                });
-            }
+                }
 
-            if (longClickListener != null) {
-                itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View v) {
-                        longClickListener.onUserMessageItemLongClick(message, position);
-                        return true;
+                // If continuous from previous message, remove extra padding.
+                if (isContinuous) {
+                    padding.setVisibility(View.GONE);
+                } else {
+                    padding.setVisibility(View.VISIBLE);
+                }
+
+                // If the message is sent on a different date than the previous one, display the date.
+                if (isNewDay) {
+                    dateText.setVisibility(View.VISIBLE);
+                    dateText.setText(DateUtils.formatDate(message.getCreatedAt()));
+                } else {
+                    dateText.setVisibility(View.GONE);
+                }
+
+                urlPreviewContainer.setVisibility(View.GONE);
+                if (message.getCustomType().equals(URL_PREVIEW_CUSTOM_TYPE)) {
+                    try {
+                        urlPreviewContainer.setVisibility(View.VISIBLE);
+                        final UrlPreviewInfo previewInfo = new UrlPreviewInfo(message.getData());
+                        urlPreviewSiteNameText.setText("@" + previewInfo.getSiteName());
+                        urlPreviewTitleText.setText(previewInfo.getTitle());
+                        urlPreviewDescriptionText.setText(previewInfo.getDescription());
+                        ImageUtils.displayImageFromUrl(context, previewInfo.getImageUrl(), urlPreviewMainImageView, null);
+                    } catch (JSONException e) {
+                        urlPreviewContainer.setVisibility(View.GONE);
+                        e.printStackTrace();
                     }
-                });
-            }
+                }
+
+                if (clickListener != null) {
+                    itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            clickListener.onUserMessageItemClick(message);
+                        }
+                    });
+                }
+
+                if (longClickListener != null) {
+                    itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View v) {
+                            longClickListener.onUserMessageItemLongClick(message, position);
+                            return true;
+                        }
+                    });
+                }
+
+
         }
 
     }

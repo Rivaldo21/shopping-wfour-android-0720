@@ -55,6 +55,7 @@ import com.wfour.onlinestoreapp.utils.map.MapsUtil;
 import com.wfour.onlinestoreapp.view.activities.ChangePassWordActivity;
 import com.wfour.onlinestoreapp.view.activities.LoginActivity;
 import com.wfour.onlinestoreapp.view.activities.MainActivity;
+import com.wfour.onlinestoreapp.view.activities.ParentWebview;
 import com.wfour.onlinestoreapp.view.activities.PhoneCountryListActivity;
 import com.wfour.onlinestoreapp.view.activities.SplashLoginActivity;
 import com.wfour.onlinestoreapp.view.activities.ViewProfileActivity;
@@ -90,7 +91,7 @@ public class MyAccountMyInfoFragment extends BaseFragment implements View.OnClic
     private TextViewRegular btnEdit;
     private TextViewRegular tvChangePassword, tvNumRate, btnViewReviews ;
     AppCompatButton tvLogout;
-    private TextView tvPhoneCode, tvEg;
+    private TextView tvPhoneCode, tvEg, usrNameProfile;
     private RelativeLayout btnSave, bill_relative;
     private TextView tvFunction, tvPoint;
     private RatingBar rating_bar;
@@ -136,6 +137,7 @@ public class MyAccountMyInfoFragment extends BaseFragment implements View.OnClic
         tvNumRate = view.findViewById(R.id.tv_num_rate);
         rating_bar = view.findViewById(R.id.rating_bar);
         btnViewReviews = view.findViewById(R.id.btn_view_reviews);
+        usrNameProfile = view.findViewById(R.id.usr_name_profile);
         bill_relative = view.findViewById(R.id.bill_relative);
 
         edtBusinessName = view.findViewById(R.id.edt_bussiness_name);
@@ -157,6 +159,9 @@ public class MyAccountMyInfoFragment extends BaseFragment implements View.OnClic
         ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
 
 //        passWord = DataStoreManager.getUser().getPassWord();
+        RelativeLayout rlAboutUs = view.findViewById(R.id.rlAboutUs);
+        RelativeLayout rlHelp = view.findViewById(R.id.rlHelp);
+        RelativeLayout rlFaq = view.findViewById(R.id.rlFaq);
         bill_relative.setOnClickListener(
                 new View.OnClickListener() {
                     @Override
@@ -176,6 +181,21 @@ public class MyAccountMyInfoFragment extends BaseFragment implements View.OnClic
                     }
                 }
         );
+        rlFaq.setOnClickListener(v->{
+            Intent intent = new Intent(getActivity(), ParentWebview.class);
+            intent.putExtra("page", "faq");
+            startActivity(intent);
+        });
+        rlAboutUs.setOnClickListener(v->{
+            Intent intent = new Intent(getActivity(), ParentWebview.class);
+            intent.putExtra("page", "aboutUs");
+            startActivity(intent);
+        });
+        rlHelp.setOnClickListener(v->{
+            Intent intent = new Intent(getActivity(), ParentWebview.class);
+            intent.putExtra("page", "help");
+            startActivity(intent);
+        });
         initRemoveActionBar(view);
     }
 
@@ -428,7 +448,7 @@ public class MyAccountMyInfoFragment extends BaseFragment implements View.OnClic
 //            tvNumRate.setText(String.valueOf(userObj.getProData().getRateCount()));
 //            rating_bar.setRating(userObj.getProData().getRate());
             }
-
+            usrNameProfile.setText(userObj.getName());
             tvNumRate.setText(String.valueOf(userObj.getTotal_rate_count()));
             rating_bar.setRating(userObj.getAvg_rate());
             ImageUtil.setImage(getActivity(), imgAvatar, userObj.getAvatar(), 600, 600);

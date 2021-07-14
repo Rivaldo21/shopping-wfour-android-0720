@@ -17,6 +17,7 @@
         android:minHeight="48dp"
         android:orientation="horizontal">
 
+
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -88,13 +89,71 @@
         android:layout_height="2dp"
         android:layout_above="@id/layout_group_chat_chatbox"
         android:background="#DfDfDf" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvChatTemplate"
+        android:layout_above="@id/rlProduct"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <RelativeLayout
+        android:visibility="gone"
+        android:layout_margin="@dimen/dimen_8dp"
+        android:layout_above="@id/layout_group_chat_chatbox"
+        android:id="@+id/rlProduct"
+        android:background="@drawable/background_white_border_gray"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dimen_8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
+        <ImageView
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:id="@+id/ivItemProduct"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_vertical" />
+
+        <LinearLayout
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/ivClose"
+            android:layout_toRightOf="@id/ivItemProduct"
+            android:layout_width="wrap_content"
+
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/dimen_8dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvNameProduct"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/dimen_12sp" />
+
+            <TextView
+                android:textColor="@color/red"
+                android:id="@+id/tvPriceProduct"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/dimen_12sp" />
+        </LinearLayout>
+        <ImageView
+            android:id="@+id/ivClose"
+            android:src="@drawable/ic_baseline_cancel_24"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_width="30dp"
+            android:layout_height="30dp"/>
+
+    </RelativeLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/layout_group_chat_chatbox"
+        android:layout_above="@id/rvChatTemplate"
         android:background="#F3F4F6"
         android:orientation="vertical">
+
 
         <!--        <RelativeLayout-->
         <!--            android:layout_width="match_parent"-->

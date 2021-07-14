@@ -97,8 +97,9 @@
         </LinearLayout>
     </LinearLayout>
     <ImageView
+        android:background="@drawable/background_white_rounded_border_grey"
         android:id="@+id/ivFavorite"
-        android:padding="4dp"
+        android:padding="8dp"
         android:layout_margin="4dp"
         android:src="@drawable/ic_heart_unfavorite"
         app:layout_constraintTop_toTopOf="parent"

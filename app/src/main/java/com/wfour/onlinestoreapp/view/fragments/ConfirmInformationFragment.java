@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
@@ -49,8 +50,8 @@ import java.util.ArrayList;
 public class ConfirmInformationFragment extends BaseFragment implements View.OnClickListener {
 
     public static final String DELIVERY = "Delivery";
-
-    private TextView tvPay, tvName, tvPhone, tvAllAddress, btnConfirm, tvMoney, btnNext, tvPrice, tvDelivery, tvAdres;
+    private AppCompatButton btnNext;
+    private TextView tvPay, tvName, tvPhone, tvAllAddress, btnConfirm, tvMoney , tvPrice, tvDelivery, tvAdres;
     private Bundle bundle;
     private CartActivity mCartActivity;
     private Toolbar toolbar;
@@ -201,11 +202,11 @@ public class ConfirmInformationFragment extends BaseFragment implements View.OnC
 
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_go_home, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
+//    @Override
+//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        inflater.inflate(R.menu.menu_go_home, menu);
+//        super.onCreateOptionsMenu(menu, inflater);
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
